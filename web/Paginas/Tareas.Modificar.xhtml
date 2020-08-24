@@ -1,0 +1,249 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <meta charset="utf-8"></meta>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"></meta>
+        <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+        <meta name="description" content=""></meta>
+        <meta name="author" content=""></meta>
+        <title>Herramientas de cobranza</title>
+        <link href="../Recursos/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+        <link href="../Recursos/vendor/metisMenu/metisMenu.min.css" rel="stylesheet"/>
+        <link href="../Recursos/vendor/datatables-plugins/dataTables.bootstrap.css" rel="stylesheet"/>
+        <link href="../Recursos/vendor/datatables-responsive/dataTables.responsive.css" rel="stylesheet"/>
+        <link href="../Recursos/dist/css/sb-admin-2.css" rel="stylesheet"/>
+        <link href="../Recursos/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+    </h:head>
+    <h:body>
+
+        <div id="wrapper">
+            <ui:include src="../Templates/aside.xhtml"/>
+            <ui:include src="../Templates/navbar.xhtml"/>
+            <div id="page-wrapper">
+                <br/>
+                <div class="row">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading col-lg-12">
+                            Tarea #{solicitudesSession.solicitudes.idSolicitud} #{solicitudesSession.solicitudes.idDeudor.primerNombre}
+                            #{solicitudesSession.solicitudes.idDeudor.segundoNombre}
+                            #{solicitudesSession.solicitudes.idDeudor.primerApellido}
+                            #{solicitudesSession.solicitudes.idDeudor.segundoApellido}
+
+                        </div>
+
+                        <div class="panel-body">
+                            <div class="panel-body">
+                                <br></br>
+
+                                <br></br>
+                                <c:if test="#{solicitudesSession.mensaje!=''}">
+                                    <div class="alert alert-success">
+                                        <h:outputText value="#{solicitudesSession.mensaje}" /> 
+                                    </div>
+                                </c:if>  
+                                <h:form>
+                                    <div class="row">
+                                        <div class="col-lg-3">
+                                            Tipo
+                                            <b:selectOneMenu id="tipo" class="form-control" disabled="true" value="#{solicitudesSession.solicitudes.subTipoSolicitud}">
+                                                <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                                <f:selectItem itemValue="OFICIO" itemLabel="OFICIO"></f:selectItem>
+                                                <f:selectItem itemValue="COMPRAR CERTIFICADO" itemLabel="COMPRAR CERTIFICADO"></f:selectItem>
+                                                <f:selectItem itemValue="SOLICITUD EN JUZGADO" itemLabel="SOLICITUD EN JUZGADO"></f:selectItem>
+                                                <f:selectItem itemValue="MEMORIAL" itemLabel="MEMORIAL"></f:selectItem>
+                                                <f:selectItem itemValue="RECONOCER +" itemLabel="RECONOCER +"></f:selectItem>
+                                                <f:selectItem itemValue="NOTIFICACION" itemLabel="NOTIFICACION"></f:selectItem>
+                                                <f:selectItem itemValue="CARTAS" itemLabel="CARTAS"></f:selectItem>
+                                                <f:selectItem itemValue="VISITAS +" itemLabel="VISITAS"></f:selectItem>
+                                                <f:selectItem itemValue="OTRO" itemLabel="OTROS"></f:selectItem>
+                                            </b:selectOneMenu> 
+                                        </div>
+                                        <div class="col-lg-3">
+                                            Entidad
+                                            <input id="entidad" jsf:value="#{solicitudesSession.solicitudes.entidadODestinatario}" type="text" disabled="true"  class="form-control"  placeholder="Digite entidada a tramitar" minlength="3" maxlength="100"  required="true" />
+                                        </div>
+                                        <div class="col-lg-3">
+                                            Gestor solicitado
+                                            <b:selectOneMenu  class="form-control"  disabled="true"  value="#{solicitudesSession.solicitudes.idSolicitado}">
+                                                <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                                <f:selectItems value="#{usuariosSession.traerTodosLosUsuarios()}" var="c"  itemLabel="#{c.nombreUsuario}">
+                                                </f:selectItems>
+                                            </b:selectOneMenu> 
+                                        </div>
+                                        <div jsf:rendered="#{solicitudesSession.solicitudes.estado !=  'RESUELTA' || solicitudesSession.solicitudes.estado !=  'DEVUELTA' || solicitudesSession.solicitudes.estado !=  'DESISTIDA' }">
+                                            <div class="col-lg-3" >
+                                                <div style="height: 10px;"></div>
+                                                <h:commandButton class="btn btn-outline btn-primary btn-block" value="↔ Reasignar gestor" pt:data-toggle="modal" pt:data-target="#mostrarVentana"  type="submit" style="margin-top:8px">
+                                                    <f:ajax  render="mostrarForm"></f:ajax>
+                                                </h:commandButton>
+
+
+
+                                            </div>                          
+                                        </div> 
+
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            Observaciones
+                                            <textarea jsf:value="#{solicitudesSession.solicitudes.observaciones}" disabled="true" type="text area"  class="form-control"  placeholder="Digite aquí las observaciones" minlength="3" maxlength="500"    ></textarea>
+
+                                        </div>
+                                        <div class="col-lg-3">
+                                            Estado
+                                            <input  jsf:value="#{solicitudesSession.solicitudes.estado}" disabled="true" type="text"  class="form-control"  placeholder="Digite aquí las observaciones" minlength="3" maxlength="500"  required="true" />
+                                        </div>    
+                                    </div>
+                                    <hr  />
+                                    <div class="row" style="border-bottom: #000">
+                                        <h:form>
+                                            <div class="col-lg-3">
+                                                Gestión
+                                                <b:selectOneMenu  class="form-control" value="#{solicitudesSession.actuaciones.gestion}" required="true">
+                                                    <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                                    <f:selectItem itemValue="ACEPTAR SOLICITUD" itemLabel="ACEPTAR SOLICITUD"></f:selectItem>
+                                                    <f:selectItem itemValue="RESOLVER SOLICITUD" itemLabel="RESOLVER SOLICITUD"></f:selectItem>
+                                                    <f:selectItem itemValue="DEVOLVER SOLICITUD" itemLabel="DEVOLVER SOLICITUD"></f:selectItem>
+                                                    <f:selectItem itemValue="DESISTIR SOLICITUD" itemLabel="DESISTIR SOLICITUD"></f:selectItem>
+                                                    <f:selectItem itemValue="FINALIZAR SOLICITUD" itemLabel="FINALIZAR SOLICITUD"></f:selectItem>
+
+                                                </b:selectOneMenu> 
+                                            </div>
+                                            <div class="col-lg-3">
+                                                Fecha gestión
+                                                <input type="date" class="form-control" jsf:value="#{solicitudesSession.fechaCapturada}" required="true">  </input>                        
+                                            </div>
+                                            <div class="col-lg-3">
+                                                Observación
+                                                <input  jsf:value="#{solicitudesSession.actuaciones.observaciones}" type="text"  class="form-control"  placeholder="Digite aquí las observaciones" minlength="3" maxlength="500"   />
+                                            </div>
+                                            <div class="col-lg-3">
+                                                <div style="height: 10px;"></div>
+                                                <h:commandButton class="btn btn-outline btn-primary btn-block" value="Agregar gestión" action="#{solicitudesSession.modificarActuacion()}" type="submit" style="margin-top:8px">
+                                                </h:commandButton>
+                                            </div>  
+                                        </h:form>
+                                    </div>
+
+                                    <hr></hr> 
+                                    <h:form>
+                                        <table class="table table-bordered" id="tablaUno" width="100%" cellspacing="0">
+                                            <thead>
+                                                <tr>
+                                                    <th>Usuario</th>
+                                                    <th>Fecha actualización</th>
+                                                    <th>Fecha gestion</th>
+                                                    <th>Gestión</th>
+                                                    <th>Observacion</th>
+                                                </tr>
+                                            </thead>
+                                            <tfoot>
+                                                <tr>
+                                                    <th>Usuario</th>
+                                                    <th>Fecha actualización</th>
+
+                                                    <th>Fecha gestion</th>
+                                                    <th>Gestión</th>
+                                                    <th>Observacion</th>
+                                                </tr>
+                                            </tfoot>
+                                            <tbody>
+                                                <ui:repeat value="#{solicitudesSession.traerActuaciones()}" var="u">
+                                                    <tr>
+                                                        <td>#{u.idUsuario.nombreUsuario}</td>
+                                                        <td>     
+                                                            <h:outputText value="#{u.fechaActuacion}"  >
+                                                                <f:convertDateTime pattern="dd-MM-yyyy HH:mm " timeZone="America/Bogota"></f:convertDateTime>
+                                                            </h:outputText>
+
+                                                        </td>
+                                                        <td>       
+                                                            <h:outputText value="#{u.fechaGestion}"  >
+                                                                <f:convertDateTime pattern="dd-MM-yyyy HH:mm " timeZone="America/Bogota"></f:convertDateTime>
+                                                            </h:outputText>
+                                                        </td>
+                                                        <td>#{u.gestion}</td>
+                                                        <td>#{u.observaciones}</td>
+
+                                                    </tr>
+                                                </ui:repeat>
+                                            </tbody>
+                                        </table>
+                                    </h:form>    
+                                </h:form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>        
+        </div>
+
+        <!-- Modal mostrar todos los telefonos-->
+        <div class="modal fade" id="mostrarVentana" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="row">
+                            <!-- Perfil del deudor-->
+                            <div class="col-lg-12">
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading">
+                                        Reasignar solicitud a un nuevo gestor
+                                    </div>
+                                    <div class="panel-body">
+
+                                        <h:form id="mostrarForm">
+                                            <div class="col-lg-6">
+                                                Gestor solicitado
+                                                <b:selectOneMenu  class="form-control"  value="#{solicitudesSession.solicitudes.idSolicitado}">
+                                                    <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                                    <f:selectItems value="#{usuariosSession.traerTodosLosUsuarios()}" var="c"  itemLabel="#{c.nombreUsuario}">
+                                                    </f:selectItems>
+                                                </b:selectOneMenu> 
+                                            </div>
+                                            <div class="col-lg-6">
+                                                Observaciones
+                                                <input  jsf:value="#{solicitudesSession.actuaciones.observaciones}" type="text"  class="form-control"  placeholder="Digite aquí las observaciones" minlength="3" maxlength="500"   />
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div style="height: 10px;"></div>
+                                                <h:commandButton class="btn btn-outline btn-primary btn-block" value="Reasignar gestor" action="#{solicitudesSession.reasignarSolicitud()}" type="submit" style="margin-top:8px">
+                                                </h:commandButton>
+                                            </div>  
+
+                                        </h:form> 
+                                    </div>
+                                    <!-- /.panel-body -->
+                                </div>
+                                <!-- /.panel -->
+                            </div>
+
+
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="../Recursos/vendor/jquery/jquery.min.js"></script>
+        <script src="../Recursos/vendor/bootstrap/js/bootstrap.min.js"></script>
+        <script src="../Recursos/vendor/metisMenu/metisMenu.min.js"></script>
+        <script src="../Recursos/vendor/datatables/js/jquery.dataTables.min.js"></script>
+        <script src="../Recursos/vendor/datatables-plugins/dataTables.bootstrap.min.js"></script>
+        <script src="../Recursos/vendor/datatables-responsive/dataTables.responsive.js"></script>
+        <script src="../Recursos/dist/js/ct.js"></script>
+    </h:body>
+
+</html>
+

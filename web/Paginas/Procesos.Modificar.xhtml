@@ -1,0 +1,341 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:b="http://bootsfaces.net/ui">
+    <h:head>
+        <meta charset="utf-8"></meta>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"></meta>
+        <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+        <meta name="description" content=""></meta>
+        <meta name="author" content=""></meta>
+        <title>Herramientas de cobranza</title>
+        <link href="../Recursos/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+        <link href="../Recursos/vendor/metisMenu/metisMenu.min.css" rel="stylesheet"/>
+        <link href="../Recursos/vendor/datatables-plugins/dataTables.bootstrap.css" rel="stylesheet"/>
+        <link href="../Recursos/vendor/datatables-responsive/dataTables.responsive.css" rel="stylesheet"/>
+        <link href="../Recursos/dist/css/sb-admin-2.css" rel="stylesheet"/>
+        <link href="../Recursos/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+    </h:head>
+    <h:body>
+        <div id="wrapper">
+            <ui:include src="../Templates/aside.xhtml"/>
+            <ui:include src="../Templates/navbar.xhtml"/>
+            <div id="page-wrapper" jsf:rendered="#{iniciarSession.usuarioLogueado.rol !=  null}">
+                <br></br>
+
+                <!--Aquí todo el códito -->
+
+                <div class="panel panel-primary">
+                    <div class="panel-heading col-lg-12">
+                        Procesos → Modificar un proceso
+                        #{procesosSession.encontrarJuzgadoDeUnProceso()}
+                    </div>
+                </div>
+
+                <br></br>
+                <br></br>
+                <div class="row">
+                    <!-- Perfil del deudor-->
+                    <div class="col-lg-6">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                Agregar o quitar demandantes
+                            </div>
+                            <div class="panel-body" style="height: 200px; overflow-y: scroll" >
+
+                                <h:form >
+                                    <div class="col-lg-9">
+                                        <b:selectOneMenu  class="form-control" value="#{procesosSession.entidades}">
+                                            <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                            <f:selectItems value="#{entidadesSession.traerTodasLasEntidades()}" var="c"  itemLabel="#{c.nombre}">
+                                            </f:selectItems>
+                                        </b:selectOneMenu> 
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <h:commandButton class="form-control" value="+" action="#{procesosSession.agregarDemandantesAProceso()}">
+                                        </h:commandButton>
+                                    </div>    
+
+                                </h:form> 
+                                <h:form id="demandantesForm">
+                                    <div class="col-lg-12">
+                                        <table class="table table-bordered" id="tablaUno" width="100%" cellspacing="0">
+                                            <thead>
+                                                <tr>
+                                                    <th>Entidad</th>
+                                                    <th style="width: 50px; text-align: center">Quitar</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <ui:repeat value="#{procesosSession.encontrarDemandantes()}" var="u">
+                                                    <tr>
+                                                        <td>#{u.idEntidad.nombre}</td>
+                                                        <td>
+                                                            <center>
+                                                                <h:commandButton value="✘" action="#{procesosSession.quitarDemandantesAProceso(u)}" class="btn btn-primary" style="background: red; border-color: red; font-weight:bold; color: white;"   >
+                                                                    <f:ajax    render="demandantesForm"></f:ajax>
+                                                                </h:commandButton>
+                                                            </center>  
+                                                        </td>
+                                                    </tr>
+                                                </ui:repeat>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </h:form>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                Agregar o quitar demandados
+                            </div>
+                            <div class="panel-body" style="height: 200px; overflow-y: scroll" >
+                                <h:form >
+                                    <div class="col-lg-9">
+                                        <b:selectOneMenu  class="form-control" value="#{procesosSession.deudores}">
+                                            <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                            <f:selectItems value="#{deudoresSession.traerTodosLosDeudores()}" var="d"  itemLabel="#{d.tipoIdentificacion}#{d.identificacion} #{d.primerNombre} #{d.segundoNombre} #{d.primerApellido} #{d.segundoApellido}">
+                                            </f:selectItems>
+                                        </b:selectOneMenu> 
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <h:commandButton class="form-control" value="+" action="#{procesosSession.agregarDemandadosAProceso()}">
+                                        </h:commandButton>
+                                    </div>    
+
+                                </h:form> 
+                                <h:form id="demandadosForm">
+                                    <div class="col-lg-12">
+                                        <table class="table table-bordered" id="tablaUno" width="100%" cellspacing="0">
+                                            <thead>
+                                                <tr>
+                                                    <th>Demandado</th>
+                                                    <th style="width: 50px; text-align: center">Quitar</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <ui:repeat value="#{procesosSession.encontrarDemandados()}" var="u">
+                                                    <tr>
+                                                        <td>#{u.idDeudor.primerNombre} #{u.idDeudor.segundoNombre} #{u.idDeudor.primerApellido} #{u.idDeudor.segundoApellido}</td>
+                                                        <td>
+                                                            <center>
+                                                                <h:commandButton value="✘" action="#{procesosSession.quitarDemandadosAProceso(u)}" class="btn btn-primary" style="background: red; border-color: red; font-weight:bold; color: white;"   >
+                                                                    <f:ajax    render="demandadosForm"></f:ajax>
+                                                                </h:commandButton>
+                                                            </center>  
+                                                        </td>
+                                                    </tr>
+                                                </ui:repeat>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </h:form>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <!-- Perfil del deudor-->
+                    <div class="col-lg-12">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                Datos básicos del proceso
+                            </div>
+                            <div class="panel-body" style="height: 300px; overflow-y: scroll" >
+                                <h:form>
+                                    <div class="col-lg-4">
+                                        Paquete jurídico
+                                        <b:selectOneMenu  class="form-control" value="#{procesosSession.procesos.paqueteJuridico}">
+                                            <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                            <f:selectItem itemValue="BANDERAS ROJAS" itemLabel="BANDERAS ROJAS"></f:selectItem>
+                                            <f:selectItem itemValue="MASIVO" itemLabel="MASIVO"></f:selectItem>
+                                            <f:selectItem itemValue="DEMANDA NUEVA" itemLabel="DEMANDA NUEVA"></f:selectItem>
+                                            <f:selectItem itemValue="DESPACHO COMISORIO" itemLabel="DESPACHO COMISORIO"></f:selectItem>
+                                        </b:selectOneMenu> 
+                                        Gestor Jurídico
+                                        <b:selectOneMenu  class="form-control" value="#{procesosSession.procesos.idGestor}">
+                                            <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                            <f:selectItems value="#{usuariosSession.traerTodosLosUsuariosActivos()}" var="c"  itemLabel="#{c.nombreUsuario}">
+                                            </f:selectItems>
+                                        </b:selectOneMenu> 
+                                        Clase proceso
+                                        <b:selectOneMenu class="form-control" value="#{procesosSession.procesos.claseProceso}" pt:required="true"  >
+                                            <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                            <f:selectItem itemValue="EJECUTIVO PERSONAL" itemLabel="EJECUTIVO PERSONAL"></f:selectItem>
+                                            <f:selectItem itemValue="EJECUTIVO HIPOTECARIO" itemLabel="EJECUTIVO HIPOTECARIO"></f:selectItem>
+                                            <f:selectItem itemValue="EJECUTIVO PARA LA EFECTIVIDAD" itemLabel="EJECUTIVO PARA LA EFECTIVIDAD"></f:selectItem>
+                                            <f:selectItem itemValue="GARANTÍA MOBILIARIA" itemLabel="GARANTÍA MOBILIARIA"></f:selectItem>
+                                            <f:selectItem itemValue="DESPACHO COMISORIO" itemLabel="DESPACHO COMISORIO"></f:selectItem>
+                                        </b:selectOneMenu>
+                                        Cuantía
+                                        <b:selectOneMenu  class="form-control" value="#{procesosSession.procesos.cuantiaProceso}">
+                                            <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                            <f:selectItem itemValue="MÍNIMA" itemLabel="MÍNIMA"></f:selectItem>
+                                            <f:selectItem itemValue="MENOR" itemLabel="MENOR"></f:selectItem>
+                                            <f:selectItem itemValue="MAYOR" itemLabel="MAYOR"></f:selectItem>
+                                        </b:selectOneMenu> 
+                                    </div>
+                                    <div class="col-lg-4">
+                                        Ubicación
+                                        <b:selectOneMenu  class="form-control" value="#{procesosSession.procesos.ubicacion}">
+                                            <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                            <f:selectItem itemValue="AL DESPACHO" itemLabel="AL DESPACHO"></f:selectItem>
+                                            <f:selectItem itemValue="SECRETARIA" itemLabel="SECRETARIA"></f:selectItem>
+                                            <f:selectItem itemValue="A LA LETRA" itemLabel="A LA LETRA"></f:selectItem>
+                                            <f:selectItem itemValue="FIRMA TITULOS" itemLabel="FIRMA TITULOS"></f:selectItem>
+                                            <f:selectItem itemValue="LIQUIDACIONES" itemLabel="LIQUIDACIONES"></f:selectItem>
+                                            <f:selectItem itemValue="OFICIOS" itemLabel="OFICIOS"></f:selectItem>
+                                            <f:selectItem itemValue="TITULOS" itemLabel="TITULOS"></f:selectItem>
+                                            <f:selectItem itemValue="ARCHIVO" itemLabel="ARCHIVO"></f:selectItem>
+                                        </b:selectOneMenu> 
+                                        Estado
+                                        <b:selectOneMenu  class="form-control" value="#{procesosSession.procesos.estado}">
+                                            <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                            <f:selectItem itemValue="ACTIVO" itemLabel="ACTIVO"></f:selectItem>
+                                            <f:selectItem itemValue="SUSPENDIDO" itemLabel="SUSPENDIDO"></f:selectItem>
+                                            <f:selectItem itemValue="TERMINADO" itemLabel="TERMINADO"></f:selectItem>
+                                        </b:selectOneMenu> 
+
+                                        Expediente corto
+                                        <input  jsf:value="#{procesosSession.procesos.expedienteCorto}" type="text"  class="form-control"  placeholder="Digite aquí el número de expediente abreviado" minlength="9" maxlength="9"  required="true" />
+                                        <br></br>
+                                        Expediente largo
+                                        <input  jsf:value="#{procesosSession.procesos.expedienteLargo}" type="text"  class="form-control"  placeholder="Digite aquí los 23 dígitos del expediente" minlength="23" maxlength="23"  required="true" />
+                                        <br></br>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <br></br>
+                                        <h7 style="color: white;">.</h7>
+                                        <b:commandButton  class="btn btn-primary" action="#{procesosSession.modificarProceso()}" style="width: 270px">
+                                            Modificar proceso
+                                        </b:commandButton>
+
+
+
+                                    </div>
+
+
+
+
+                                </h:form>
+
+
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                Juzgado actual
+                            </div>
+                            <div class="panel-body" style="height: 220px; overflow-y: scroll" >
+                                <div class="panel-body" style="height: 200px; " >
+                                    <h:form id="juzgadoActualForm">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                Juzgado actual
+                                                <b:selectOneMenu  class="form-control" value="#{procesosSession.juzgados}">
+                                                    <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                                    <f:selectItems value="#{juzgadosSession.traerTodosLosJuzgados()}" var="x"   itemLabel="#{x.nombre}">
+                                                    </f:selectItems>
+                                                </b:selectOneMenu> 
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <h:commandButton class=" btn btn-primary form-control" value="Actualizar" action="#{procesosSession.agregarUnJuzgadoAUnProceso()}">
+                                                </h:commandButton>
+                                            </div>  
+                                        </div>
+                                    </h:form> 
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                Histórico de juzgados
+                            </div>
+                            <div class="panel-body" style="height: 220px; overflow-y: scroll" >
+                                <div class="panel-body" style="height: 200px;" >
+                                    <h:form id="historicoDeJuzgadosForm">
+                                        <div class="col-lg-12">
+                                            <table class="table table-bordered" id="tablaUno" width="100%" cellspacing="0">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Juzgado</th>
+                                                        <th>Tipo</th>
+                                                        <th>Fecha</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <ui:repeat value="#{procesosSession.encontrarJuzgadosDeUnProceso()}" var="u">
+                                                        <tr>
+                                                            <td> #{u.idJuzgado.numero} #{u.idJuzgado.codigoClase} #{u.idJuzgado.idCiudad.ciudad}</td>
+                                                            <td>#{u.relacion}</td>
+                                                            <td>
+                                                                <h:outputText value="#{u.fechaIngreso}"  >
+                                                                    <f:convertDateTime pattern="dd-MM-yyyy" timeZone="America/Bogota"></f:convertDateTime>
+                                                                </h:outputText>
+
+                                                            </td>
+                                                        </tr>
+                                                    </ui:repeat>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                    </h:form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+
+
+            </div>
+            <div jsf:rendered="#{iniciarSession.usuarioLogueado.rol ==  null}">
+                <div class="navbar-header">
+                    <a class="navbar-brand">Su sesión finalizó.
+                    </a>
+                </div>
+            </div>
+        </div>
+        <script src="../Recursos/vendor/jquery/jquery.min.js"></script>
+        <script src="../Recursos/vendor/bootstrap/js/bootstrap.min.js"></script>
+        <script src="../Recursos/vendor/metisMenu/metisMenu.min.js"></script>
+        <script src="../Recursos/vendor/datatables/js/jquery.dataTables.min.js"></script>
+        <script src="../Recursos/vendor/datatables-plugins/dataTables.bootstrap.min.js"></script>
+        <script src="../Recursos/vendor/datatables-responsive/dataTables.responsive.js"></script>
+        <script src="../Recursos/dist/js/ct.js"></script>
+
+    </h:body>
+</html>
+

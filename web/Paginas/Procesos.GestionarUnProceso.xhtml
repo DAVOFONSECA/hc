@@ -1,0 +1,331 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <meta charset="utf-8"></meta>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"></meta>
+        <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+        <meta name="description" content=""></meta>
+        <meta name="author" content=""></meta>
+        <title>Herramientas de cobranza</title>
+        <link href="../Recursos/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+        <link href="../Recursos/vendor/metisMenu/metisMenu.min.css" rel="stylesheet"/>
+        <link href="../Recursos/vendor/datatables-plugins/dataTables.bootstrap.css" rel="stylesheet"/>
+        <link href="../Recursos/vendor/datatables-responsive/dataTables.responsive.css" rel="stylesheet"/>
+        <link href="../Recursos/dist/css/sb-admin-2.css" rel="stylesheet"/>
+        <link href="../Recursos/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+
+
+    </h:head>
+    <h:body>
+        <div id="wrapper">
+            <ui:include src="../Templates/aside.xhtml"/>
+            <ui:include src="../Templates/navbar.xhtml"/>
+            <div id="page-wrapper" jsf:rendered="#{iniciarSession.usuarioLogueado.rol !=  null}">
+                <br></br>
+
+                <!--Aquí todo el códito -->
+                <div class="row">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading col-lg-12">
+                            Procesos - Gestionar un proceso
+                        </div>
+                        <div class="row">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <h:form> 
+                                <div class="input-group">
+                                    <h:inputText  value="#{procesosSession.procesos.idProceso}" class="form-control" pt:placeholder="Carpeta" ></h:inputText>
+                                    <span class="input-group-btn">
+                                        <b:commandButton class="btn btn-default" action="#{procesosSession.encontrarUnProceso()}">
+                                            <i class="fa fa-search"></i>
+                                        </b:commandButton>
+                                        <button class="btn btn-default" type="button">
+                                            <i class="fa fa-arrow-circle-right"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                                <br></br>
+                            </h:form>
+                        </div>
+                        <div class="col-lg-1">
+
+                        </div>
+                        <div class="col-lg-7">
+                            <b>
+                                <h5 style="color: #0d6aad; "  jsf:rendered="#{procesosSession.procesos.idProceso !=  null}" >  #{procesosSession.procesos.claseProceso} | #{procesosSession.procesos.expedienteCorto} | #{procesosSession.procesos.expedienteLargo}</h5>
+                            </b>   
+                        </div>  
+                    </div>
+
+                    <div class="row">
+                        <!-- Demandantes-->
+                        <div class="col-lg-5">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    Demandantes
+                                </div>
+
+                                <div class="panel-body" style="height: 155px; overflow-y: scroll"  >
+                                    <div class="table-responsive">
+                                        <h:form>
+                                            <table class="table table-hover" >
+                                                <thead>
+                                                    <td>Demandantes</td>
+                                                </thead>
+                                                <tbody>
+                                                    <ui:repeat var="o" value="#{procesosSession.encontrarDemandantes()}">
+                                                        <tr>
+                                                            <td>#{o.idEntidad.nombre}</td>
+                                                        </tr>
+                                                    </ui:repeat>
+                                                </tbody>
+                                            </table>
+                                        </h:form>
+                                    </div>
+
+                                </div>    
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    Demandados
+                                </div>
+                                <div class="panel-body" style="height: 155px; overflow-y: scroll"  >
+                                    <div class="table-responsive">
+                                        <h:form>
+                                            <table class="table table-hover" >
+                                                <thead>
+                                                    <td>Demandado</td>
+                                                </thead>
+                                                <tbody>
+                                                    <ui:repeat var="o" value="#{procesosSession.encontrarDemandados()}">
+                                                        <tr>
+                                                            <td>#{o.idDeudor.primerNombre} #{o.idDeudor.segundoNombre} #{o.idDeudor.primerApellido} #{o.idDeudor.segundoApellido} </td>
+                                                            <td>
+                                                                <center>
+                                                                    <h:commandButton value="✘" action="#{procesosSession.imprimirDemandado(o)}" class="btn btn-primary" style="background: red; border-color: red; font-weight:bold; color: white;"   >
+                                                                    </h:commandButton>
+                                                                </center>
+                                                            </td>
+                                                            <td>
+                                                                <b:commandButton style="background: #ff8300; border-color: #ff8300; font-weight:bold; "  class="btn btn-primary" action="#{procesosSession.imprimirDemandado(o)}">
+                                                                    <i class="fa fa-search"></i>
+                                                                </b:commandButton>
+                                                            </td>
+
+                                                        </tr>
+                                                    </ui:repeat>
+                                                </tbody>
+                                            </table>
+                                        </h:form>
+                                    </div>
+
+                                </div>   
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- Perfil del deudor-->
+                        <div class="col-lg-5">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    Perfil del proceso
+                                </div>
+                                <div class="panel-body" style="height: 155px; " >
+                                    <div class="row" >
+                                        <div class="col-lg-2" >
+                                            Paquete:  
+                                        </div>
+                                        <div class="col-lg-10" >
+                                            <b> <h:outputText value="#{procesosSession.procesos.paqueteJuridico}" style="color: #0d6aad;"></h:outputText></b>
+                                        </div>
+
+                                    </div>
+                                    <br/>
+                                    <div class="row" >
+                                        <div class="col-lg-2" >
+                                            Gestor:
+                                        </div>
+                                        <div class="col-lg-4" >
+                                            <b> <h:outputText value="#{procesosSession.procesos.idGestor.nombreUsuario}" style="color: #0d6aad;"></h:outputText></b>
+                                        </div>
+                                        <div class="col-lg-2" >
+                                            Cuantía: 
+                                        </div>
+                                        <div class="col-lg-4" >
+                                            <b> <h:outputText value="#{procesosSession.procesos.cuantiaProceso}" style="color: #0d6aad;"></h:outputText></b>
+                                        </div>
+                                    </div>
+                                    <br/>
+                                    <div class="row" >
+                                        <div class="col-lg-2" >
+                                            Ubicación:
+                                        </div>
+                                        <div class="col-lg-4" >
+                                            <b> <h:outputText value="#{procesosSession.procesos.ubicacion}" style="color: #0d6aad;"></h:outputText></b>
+                                        </div>
+                                        <div class="col-lg-2" >
+                                            Estado: 
+                                        </div>
+                                        <div class="col-lg-4" >
+                                            <b> <h:outputText value="#{procesosSession.procesos.estado}" style="color: #0d6aad;"></h:outputText></b>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <h:form>
+                                        <h:commandButton value="✚" style="background-color: #005983;" pt:data-toggle="modal" pt:data-target="#agregarJuzgadoVentana" >
+                                            <f:ajax listener="#agregarJuzgadoVentana" render=""></f:ajax>
+                                        </h:commandButton>
+                                        Juzgados
+                                    </h:form>
+
+                                </div>
+                                <div class="panel-body" style="height: 155px; overflow-y: scroll"  >
+                                    <div class="table-responsive">
+                                        <h:form>
+                                            <table class="table table-hover" >
+                                                <thead>
+                                                    <td>Juzgado</td>
+                                                    <td>Relación</td>
+                                                    <td>Fecha</td>
+                                                </thead>
+                                                <tbody>
+                                                    <ui:repeat var="h" value="#{procesosSession.encontrarJuzgadosDeUnProceso()}">
+                                                        <tr>
+                                                            <td style="vertical-align: middle;"><h:outputText value="#{h.idJuzgado.nombre}"/></td >
+                                                            <td style="vertical-align: middle;"><h:outputText value="#{h.relacion}"  /></td >
+                                                            <td style="width: 100px" >
+                                                                <h:outputText value="#{h.fechaIngreso}"  >
+                                                                    <f:convertDateTime pattern="dd-MM-yyyy HH:mm " timeZone="America/Bogota"></f:convertDateTime>
+                                                                </h:outputText>
+                                                            </td >
+                                                        </tr>
+                                                    </ui:repeat>
+                                                </tbody>
+                                            </table>
+                                        </h:form>
+                                    </div>
+
+                                </div>   
+                            </div>
+                        </div>
+                    </div>
+
+                </div>   
+            </div>
+            <div jsf:rendered="#{iniciarSession.usuarioLogueado.rol ==  null}">
+                <div class="navbar-header">
+                    <a class="navbar-brand">Su sesión finalizó.
+                    </a>
+                </div>
+            </div>
+
+
+            <!-- 3. Modal Agregar juzgado-->
+            <div  class="modal fade" id="agregarJuzgadoVentana" tabindex="-1" role="dialog" aria-hidden="true">
+                <div  style="width: 520px; " class="modal-dialog modal-dialog-centered" role="document"  >
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <h:form id="juzgadoVentanaForm">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <p></p>
+                                        <p></p>
+                                        <p></p>
+                                        <div  class="panel panel-primary">
+                                            <div class="panel-heading">
+                                                Cambiar Juzgado 
+                                            </div>
+                                            <div class="panel-body"   >
+                                                <div  class="table-responsive">
+                                                    <h:form  >
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                Nuevo Juzgado
+                                                                <b:selectOneMenu  class="form-control" value="#{procesosSession.juzgados}">
+                                                                    <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                                                    <f:selectItems value="#{juzgadosSession.traerTodosLosJuzgados()}" var="c"  itemLabel="#{c.numero} #{c.codigoClase} #{c.idCiudad.ciudad} ">
+                                                                    </f:selectItems>
+                                                                </b:selectOneMenu> 
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                Método
+                                                                <b:selectOneMenu pt:placeholder="INGRESE UNA OPCIÓN" class="form-control" value="#" pt:required="true"  >
+                                                                    <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                                                    <f:selectItem itemValue='AUTO AVOCA CONOCIMIENTO' itemLabel='AUTO AVOCA CONOCIMIENTO'></f:selectItem>
+                                                                </b:selectOneMenu>
+                                                            </div>
+                                                        </div>   
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                Fecha de auto
+                                                                <b:selectOneMenu  class="form-control" value="#{procesosSession.juzgados}">
+                                                                    <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                                                    <f:selectItems value="#{juzgadosSession.traerTodosLosJuzgados()}" var="c"  itemLabel="#{c.numero} #{c.codigoClase} #{c.idCiudad.ciudad} ">
+                                                                    </f:selectItems>
+                                                                </b:selectOneMenu> 
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                Notificación por Estado
+                                                                <b:selectOneMenu pt:placeholder="INGRESE UNA OPCIÓN" class="form-control" value="#" pt:required="true"  >
+                                                                    <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                                                    <f:selectItem itemValue='AUTO AVOCA CONOCIMIENTO' itemLabel='AUTO AVOCA CONOCIMIENTO'></f:selectItem>
+                                                                </b:selectOneMenu>
+                                                            </div>
+                                                        </div> 
+
+
+                                                    </h:form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </h:form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
+        </div>
+
+
+        <script src="../Recursos/vendor/jquery/jquery.min.js"></script>
+        <script src="../Recursos/vendor/bootstrap/js/bootstrap.min.js"></script>
+        <script src="../Recursos/vendor/metisMenu/metisMenu.min.js"></script>
+        <script src="../Recursos/vendor/datatables/js/jquery.dataTables.min.js"></script>
+        <script src="../Recursos/vendor/datatables-plugins/dataTables.bootstrap.min.js"></script>
+        <script src="../Recursos/vendor/datatables-responsive/dataTables.responsive.js"></script>
+        <script src="../Recursos/dist/js/ct.js"></script>
+    </h:body>
+
+
+
+
+</html>
+

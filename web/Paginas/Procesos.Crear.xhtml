@@ -1,0 +1,181 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:b="http://bootsfaces.net/ui">
+    <h:head>
+        <meta charset="utf-8"></meta>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"></meta>
+        <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+        <meta name="description" content=""></meta>
+        <meta name="author" content=""></meta>
+        <title>Herramientas de cobranza</title>
+        <link href="../Recursos/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+        <link href="../Recursos/vendor/metisMenu/metisMenu.min.css" rel="stylesheet"/>
+        <link href="../Recursos/vendor/datatables-plugins/dataTables.bootstrap.css" rel="stylesheet"/>
+        <link href="../Recursos/vendor/datatables-responsive/dataTables.responsive.css" rel="stylesheet"/>
+        <link href="../Recursos/dist/css/sb-admin-2.css" rel="stylesheet"/>
+        <link href="../Recursos/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+    </h:head>
+    <h:body>
+        <div id="wrapper">
+            <ui:include src="../Templates/aside.xhtml"/>
+            <ui:include src="../Templates/navbar.xhtml"/>
+            <div id="page-wrapper" jsf:rendered="#{iniciarSession.usuarioLogueado.rol !=  null}">
+                <br></br>
+
+                <!--Aquí todo el códito -->
+                <div class="row">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading col-lg-11">
+                            Procesos → Crear un proceso
+                        </div>
+
+                        <div class="panel-body">
+                            <div class="panel-body">
+                                <br></br>
+                                <br></br>
+                                <c:if test="#{procesosSession.mensajeErrorCrear!=''}">
+                                    <div class="alert alert-success">
+                                        #{procesosSession.mensajeErrorCrear}
+                                    </div>
+                                </c:if>
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="row">
+                                            Lista de demandantes
+                                            <h:form id="demandantesForm">
+                                                <div class="col-lg-9">
+                                                    <b:selectOneMenu  class="form-control" value="#{procesosSession.entidades}">
+                                                        <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                                        <f:selectItems value="#{entidadesSession.traerTodasLasEntidades()}" var="c"  itemLabel="#{c.nombre}">
+                                                        </f:selectItems>
+                                                    </b:selectOneMenu> 
+                                                </div>
+                                                <div class="col-lg-3">
+                                                    <h:commandButton class="form-control" value="+" action="#{procesosSession.agregarDemandantes()}">
+                                                    </h:commandButton>
+                                                </div>    
+
+                                            </h:form>                            
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <h:form id="demandantesTablaForm">
+                                                    <table class="table table-bordered" id="tablaDos" width="100%" cellspacing="0">
+                                                        <tbody>
+                                                            <ui:repeat value="#{procesosSession.demandantes}" var="u">
+                                                                <tr>
+                                                                    <td>#{u.nombre} </td>
+                                                                </tr>
+                                                            </ui:repeat>
+                                                        </tbody>
+                                                    </table>
+                                                </h:form>  
+                                            </div>
+                                        </div> 
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="row">
+                                            Lista de demandados
+                                            <h:form id="demandadosForm">
+                                                <div class="col-lg-9">
+                                                    <b:selectOneMenu  class="form-control" value="#{procesosSession.deudores}">
+                                                        <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                                        <f:selectItems value="#{deudoresSession.traerTodosLosDeudores()}" var="d"  itemLabel="#{d.tipoIdentificacion}#{d.identificacion} #{d.primerNombre} #{d.segundoNombre} #{d.primerApellido} #{d.segundoApellido}">
+                                                        </f:selectItems>
+                                                    </b:selectOneMenu> 
+                                                </div>
+                                                <div class="col-lg-3">
+                                                    <h:commandButton class="form-control" value="+" action="#{procesosSession.agregarDemandados()}">
+                                                    </h:commandButton>
+                                                </div>       
+                                            </h:form>                            
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+
+                                                <h:form id="demandadosTablaForm">
+                                                    <table class="table table-bordered" id="tablaDos" width="100%" cellspacing="0">
+                                                        <tbody>
+                                                            <ui:repeat value="#{procesosSession.demandados}" var="d">
+                                                                <tr>
+                                                                    <td>#{d.primerNombre} #{d.segundoNombre} #{d.primerApellido} #{d.segundoApellido}</td>
+                                                                </tr>
+                                                            </ui:repeat>
+                                                        </tbody>
+                                                    </table>
+                                                </h:form>  
+                                            </div>
+                                        </div> 
+
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <h:form>
+                                            Clase proceso
+                                            <b:selectOneMenu class="form-control" value="#{procesosSession.procesos.claseProceso}" pt:required="true"  >
+                                                <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                                <f:selectItem itemValue="EJECUTIVO PERSONAL" itemLabel="EJECUTIVO PERSONAL"></f:selectItem>
+                                                <f:selectItem itemValue="EJECUTIVO HIPOTECARIO" itemLabel="EJECUTIVO HIPOTECARIO"></f:selectItem>
+                                                <f:selectItem itemValue="EJECUTIVO PARA LA EFECTIVIDAD" itemLabel="EJECUTIVO PARA LA EFECTIVIDAD"></f:selectItem>
+                                                <f:selectItem itemValue="GARANTÍA MOBILIARIA" itemLabel="GARANTÍA MOBILIARIA"></f:selectItem>
+                                                <f:selectItem itemValue="DESPACHO COMISORIO" itemLabel="DESPACHO COMISORIO"></f:selectItem>
+                                            </b:selectOneMenu>
+                                            Encargado
+                                            <b:selectOneMenu  class="form-control" value="#{procesosSession.procesos.idGestor}">
+                                                <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                                <f:selectItems value="#{usuariosSession.traerTodosLosUsuariosActivos()}" var="c"  itemLabel="#{c.nombreUsuario}">
+                                                </f:selectItems>
+                                            </b:selectOneMenu> 
+                                            Juzgado
+                                            <b:selectOneMenu  class="form-control" value="#{procesosSession.juzgados}">
+                                                <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                                <f:selectItems value="#{juzgadosSession.traerTodosLosJuzgados()}" var="c"  itemLabel="#{c.numero} #{c.codigoClase} #{c.idCiudad.ciudad} ">
+                                                </f:selectItems>
+                                            </b:selectOneMenu> 
+                                            <div class="row">
+                                                <h:commandButton class="btn btn-outline btn-primary btn-block" value="Borrar formulario" action="#{procesosSession.borrarPartesDelProceso()}" type="submit" style="margin-top:8px">
+                                                </h:commandButton>
+                                            </div>  
+                                            <div class="row">
+                                                <h:commandButton class="btn btn-outline btn-primary btn-block" value="Agregar proceso" action="#{procesosSession.agregarProceso()}" type="submit" style="margin-top:8px">
+                                                </h:commandButton>
+                                            </div>
+                                        </h:form>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>   
+            </div>
+            <div jsf:rendered="#{iniciarSession.usuarioLogueado.rol ==  null}">
+                <div class="navbar-header">
+                    <a class="navbar-brand">Su sesión finalizó.
+                    </a>
+                </div>
+            </div>
+        </div>
+        <script src="../Recursos/vendor/jquery/jquery.min.js"></script>
+        <script src="../Recursos/vendor/bootstrap/js/bootstrap.min.js"></script>
+        <script src="../Recursos/vendor/metisMenu/metisMenu.min.js"></script>
+        <script src="../Recursos/vendor/datatables/js/jquery.dataTables.min.js"></script>
+        <script src="../Recursos/vendor/datatables-plugins/dataTables.bootstrap.min.js"></script>
+        <script src="../Recursos/vendor/datatables-responsive/dataTables.responsive.js"></script>
+        <script src="../Recursos/dist/js/ct.js"></script>
+        <script>
+            $(document).ready(function () {
+                $('#tablaUno').DataTable({
+                    responsive: true
+                });
+            });
+        </script>
+    </h:body>
+</html>
+

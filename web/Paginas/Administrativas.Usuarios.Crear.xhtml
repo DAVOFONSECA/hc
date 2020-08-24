@@ -1,0 +1,135 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <meta charset="utf-8"></meta>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"></meta>
+        <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+        <meta name="description" content=""></meta>
+        <meta name="author" content=""></meta>
+        <title>Herramientas de cobranza</title>
+        <link href="../Recursos/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+        <link href="../Recursos/vendor/metisMenu/metisMenu.min.css" rel="stylesheet"/>
+        <link href="../Recursos/vendor/datatables-plugins/dataTables.bootstrap.css" rel="stylesheet"/>
+        <link href="../Recursos/vendor/datatables-responsive/dataTables.responsive.css" rel="stylesheet"/>
+        <link href="../Recursos/dist/css/sb-admin-2.css" rel="stylesheet"/>
+        <link href="../Recursos/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+    </h:head>
+    <h:body>
+        <div id="wrapper">
+            <ui:include src="../Templates/aside.xhtml"/>
+            <ui:include src="../Templates/navbar.xhtml"/>
+            <div id="page-wrapper" jsf:rendered="#{iniciarSession.usuarioLogueado.rol !=  null}">
+                <br></br>
+
+                <!--Aquí todo el códito -->
+                <div class="row">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading col-lg-11">
+                            Gestión administrativa - Crear un usuario
+                        </div>
+                        <div class="col-lg-1">
+                            <a href="Administrativas.Usuarios.Todos.xhtml"><i class="fa fa-backward">
+                                </i> <br></br>Volver</a>
+                        </div>
+                        <div class="panel-body">
+                            <div class="panel-body">
+                                <br></br>
+                                <br></br>
+                                <c:if test="#{usuariosSession.mensajeCrearUsuario!=''}">
+                                    <div class="alert alert-success">
+                                        #{usuariosSession.mensajeCrearUsuario}
+                                    </div>
+                                </c:if>
+                                <h:form>
+                                    <div class="row">
+                                        <div class="col-lg-3">
+                                            Primer nombre
+                                            <input  jsf:value="#{usuariosSession.usuario.primerNombre}" type="text"  class="form-control"  placeholder="Digite aquí el primer nombre" minlength="3" maxlength="50"  required="true" />
+                                            <p></p>
+                                            Segundo nombre
+                                            <input  jsf:value="#{usuariosSession.usuario.segundoNombre}" type="text"  class="form-control" placeholder="Digite aquí el segundo nombre" minlength="3" maxlength="50"   />
+                                            <p></p>
+                                            Primer apellido
+                                            <input  jsf:value="#{usuariosSession.usuario.primerApellido}" type="text"  class="form-control"  placeholder="Digite aquí el primer apellido" minlength="3" maxlength="50"  required="true" />
+                                            <p></p>
+                                            Segundo apellido
+                                            <input  jsf:value="#{usuariosSession.usuario.segundoApellido}" type="text"  class="form-control"   placeholder="Digite aquí el segundo apellido" minlength="3" maxlength="50"   />
+                                        </div>
+                                        <div class="col-lg-3">
+                                            Tipo de identificación
+                                            <h:selectOneMenu class="form-control" value="#{usuariosSession.usuario.tipoIdentificacion}" pt:required="true"  >
+                                                <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                                <f:selectItem itemValue="C" itemLabel="C - Cédula de ciudadanía"></f:selectItem>
+                                                <f:selectItem itemValue="E" itemLabel="E - Cédula de extranjería"></f:selectItem>
+                                                <f:selectItem itemValue="N" itemLabel="N - Número de identificación tributaria"></f:selectItem>
+                                                <f:selectItem itemValue="P" itemLabel="P - Pasaporte"></f:selectItem>
+                                                <f:selectItem itemValue="T" itemLabel="T - Tarjeta de identidad"></f:selectItem>
+                                            </h:selectOneMenu>
+                                            <p></p>
+                                            Identificación
+                                            <input jsf:value="#{usuariosSession.usuario.identificacion}" type="number" class="form-control" placeholder="Digite aquí el número de identificación" minlength="4" maxlength="10" min="1111" max="2000000000"   required="true"/>
+                                            <p></p> 
+                                            Dígito de verificación
+                                            <input jsf:value="#{usuariosSession.usuario.digitoVerificacion}"  class="form-control"  type="number"  min="0" max="9" placeholder="Ingrese el dígito de verificación"  ></input>
+                                            <p></p> 
+                                            Correo electrónico
+                                            <input jsf:value="#{usuariosSession.usuario.correoElectronico}" type="email" class="form-control"  placeholder="Digite aquí el correo electrónico"   minlength="4" maxlength="50"  required="true"/>
+
+                                        </div>      
+                                        <div class="col-lg-3">
+                                            Rol
+                                            <h:selectOneMenu class="form-control" value="#{usuariosSession.usuario.rol}" pt:required="true"  >
+                                                <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                                <f:selectItem itemValue="ADMINISTRADOR" itemLabel="ADMINISTRADOR"></f:selectItem>
+                                                <f:selectItem itemValue="GESTOR" itemLabel="GESTOR"></f:selectItem>
+                                                <f:selectItem itemValue="DEPENDIENTE" itemLabel="DEPENDIENTE"></f:selectItem>
+                                                <f:selectItem itemValue="MENSAJERO" itemLabel="MENSAJERO"></f:selectItem>
+
+                                            </h:selectOneMenu>
+                                            <p></p>
+                                
+                                        </div> 
+                                        <div class="col-lg-3">
+                                            <h7 style="color: white;">espacio</h7>
+                                            <h:commandButton style="background: #ff8300; border-color: #ff8300; font-weight:bold; "  class="form-control btn-warning" value="Crear usuario" action="#{usuariosSession.crearUsuario()}" type="submit">
+                                            </h:commandButton>
+                                        </div>        
+                                    </div>
+
+                                </h:form>
+                            </div>
+                        </div>
+                    </div>
+                </div>   
+            </div>
+            <div jsf:rendered="#{iniciarSession.usuarioLogueado.rol ==  null}">
+                <div class="navbar-header">
+                    <a class="navbar-brand">Su sesión finalizó.
+                    </a>
+                </div>
+            </div>
+        </div>
+        <script src="../Recursos/vendor/jquery/jquery.min.js"></script>
+        <script src="../Recursos/vendor/bootstrap/js/bootstrap.min.js"></script>
+        <script src="../Recursos/vendor/metisMenu/metisMenu.min.js"></script>
+        <script src="../Recursos/vendor/datatables/js/jquery.dataTables.min.js"></script>
+        <script src="../Recursos/vendor/datatables-plugins/dataTables.bootstrap.min.js"></script>
+        <script src="../Recursos/vendor/datatables-responsive/dataTables.responsive.js"></script>
+        <script src="../Recursos/dist/js/ct.js"></script>
+        <script>
+            $(document).ready(function () {
+                $('#tablaUno').DataTable({
+                    responsive: true
+                });
+            });
+        </script>
+    </h:body>
+</html>
+

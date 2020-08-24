@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">   
+
+    <h:head>
+        <meta charset="utf-8"></meta>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"></meta>
+        <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+        <meta name="description" content=""></meta>
+        <meta name="author" content=""></meta>
+        <title>Herramientas de cobranza</title>
+        <link href="../Recursos/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+        <link href="../Recursos/vendor/metisMenu/metisMenu.min.css" rel="stylesheet"/>
+        <link href="../Recursos/vendor/datatables-plugins/dataTables.bootstrap.css" rel="stylesheet"/>
+        <link href="../Recursos/vendor/datatables-responsive/dataTables.responsive.css" rel="stylesheet"/>
+        <link href="../Recursos/dist/css/sb-admin-2.css" rel="stylesheet"/>
+        <link href="../Recursos/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+    </h:head>
+    <body>
+        <div id="wrapper">
+            <ui:include src="../Templates/aside.xhtml"/>
+            <ui:include src="../Templates/navbar.xhtml"/>
+            <div id="page-wrapper">
+                <br/>
+                #{cartasVisitasSession.limpiarCartasVisitas()}
+
+                <div class="row"  >
+                    <div class="col-lg-10">
+                        <h5 style="color: #154360" jsf:rendered="#{deudoresSession.deudor.primerNombre !=  null}" > #{deudoresSession.deudor.primerNombre} #{deudoresSession.deudor.segundoNombre} #{deudoresSession.deudor.primerApellido} #{deudoresSession.deudor.segundoApellido} -  #{cartasVisitasSession.direcciones.direccion} </h5>
+                    </div>
+                    <div class="col-lg-2">
+                        <h:form >
+                            <h:commandButton  class="form-control btn-primary" action="#{menuSession.irAGestionarUnDeudor()}" value="Volver">
+                            </h:commandButton>
+                        </h:form>
+                    </div>
+                </div>
+                <br></br>
+                <h:form id="mensajeForm">
+                    <c:if test="#{cartasVisitasSession.mensaje!=''}">
+                        <div class="alert alert-success">
+                            <h:outputText value="#{cartasVisitasSession.mensaje}" /> 
+                        </div>
+                    </c:if>  
+                </h:form>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h:form>
+                                    <h:commandButton value="✚" style="background-color: #005983;" pt:data-toggle="modal" pt:data-target="#agregarDocumentosVentana" >
+                                        <f:ajax listener="#" render="agregarDocumentosForm"></f:ajax>
+                                    </h:commandButton>
+                                    <h:commandButton value="☰" style="background-color: #005983;" pt:data-toggle="modal" pt:data-target="#mostrarTodosLosTelefonosVentana" >
+                                        <f:ajax  render="mostrarTodosLosTelefonosForm"></f:ajax>
+                                    </h:commandButton> 
+                                    Documentos
+                                </h:form >
+                            </div>
+                            <div class="panel-body" style="height: 160px; overflow-y: scroll"  >
+                                <div class="table-responsive">
+                                    <h:form id="cartasVisitasForm">
+                                        <table class="table table-hover" >
+                                            <thead>
+                                                <td>Tipo</td>
+                                                <td>Estado</td>
+                                                <td>Editar</td>
+                                                <td>Ver</td>
+
+                                            </thead>
+                                            <tbody>
+                                                <ui:repeat var="t" value="#{cartasVisitasSession.traerCartasVisitasDireccion()}">
+                                                    <tr>
+                                                        <td>#{t.tipo}</td>
+                                                        <td>#{t.estado}</td>
+                                                        <td>
+                                                            <h:commandButton value="✍" pt:data-toggle="modal" pt:data-target="#editarDocumentosVentana"  >
+                                                                <f:ajax  listener="#{cartasVisitasSession.guardarCartasVisitas(t)}" render="editarDocumentosForm"></f:ajax>
+                                                            </h:commandButton>
+                                                        </td>
+                                                        <td>
+                                                            <h:commandButton   value="🔎"  >
+                                                                <f:ajax  listener="#{cartasVisitasSession.guardarCartasVisitas(t)}"  render="actuacionesCartasVisitasForm tipoDocumentoForm mensajeForm"></f:ajax>
+                                                            </h:commandButton>
+                                                        </td>
+                                                    </tr>
+                                                </ui:repeat>
+                                            </tbody>
+                                        </table>
+                                    </h:form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Direcciones.row -->
+                    <div class="col-lg-8">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h:form id="tipoDocumentoForm">
+                                    <h:commandButton value="☰" style="background-color: #005983;">
+                                    </h:commandButton> 
+                                    Documento: #{cartasVisitasSession.cv.tipo} Guía: #{cartasVisitasSession.cv.guia} 
+                                </h:form >
+                            </div>
+                            <div class="panel-body" style="height: 400px; "  >
+
+                                <div class="table-responsive" style="height: 170px; overflow-y: scroll">
+                                    <h:form id="actuacionesCartasVisitasForm">
+                                        <table class="table table-hover" >
+                                            <thead>
+                                                <td>Usuario</td>
+                                                <td>F.Gestión</td>
+                                                <td>F.Actuación</td>
+                                                <td>Gestión</td>
+                                                <td>Resultado</td>
+                                                <td>Observación</td>
+                                            </thead>
+                                            <tbody>
+                                                <ui:repeat var="acv" value="#{cartasVisitasSession.traerActuacionesCartasVisitasDireccion()}">
+                                                    <tr>
+                                                        <td>#{acv.idUsuario.nombreUsuario}</td>
+                                                        <td>
+                                                            <h:outputText value="#{acv.fechaGestion}"  >
+                                                                <f:convertDateTime pattern="dd-MM-yyyy"></f:convertDateTime>
+                                                            </h:outputText>
+                                                        </td>
+                                                        <td>
+                                                            <h:outputText value="#{acv.fechaActuacion}"  >
+                                                                <f:convertDateTime pattern="dd-MM-yyyy"></f:convertDateTime>
+                                                            </h:outputText>
+                                                        </td>
+                                                        <td>#{acv.gestion}</td>
+                                                        <td>#{acv.resultado}</td>
+                                                        <td>#{acv.observacion}</td>
+                                                    </tr>
+                                                </ui:repeat>
+                                            </tbody>
+                                        </table>
+                                    </h:form>
+                                </div>
+
+                                <hr></hr>
+                                <h:form id="ingresarGestionForm">
+                                    <div class="row col-lg-12">
+                                        <div class="col-lg-6">
+                                            Gestión
+                                            <h:selectOneMenu class="form-control" value="#{cartasVisitasSession.acv.gestion}" pt:required="true"  >
+                                                <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                                <f:selectItem itemValue="ENTREGAR A COURRIER" itemLabel="ENTREGAR A COURRIER"></f:selectItem>
+                                                <f:selectItem itemValue="REPORTAR RESULTADO" itemLabel="REPORTAR RESULTADO"></f:selectItem>
+                                                <f:selectItem itemValue="DESISTIR DOCUMENTO" itemLabel="DESISTIR DOCUMENTO"></f:selectItem>
+                                            </h:selectOneMenu>
+                                        </div>
+
+                                        <div class="col-lg-6">
+                                            Resultado
+                                            <h:selectOneMenu class="form-control" value="#{cartasVisitasSession.acv.resultado}" pt:required="true"  >
+                                                <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                                <f:selectItem itemValue="ENTREGADO A COURRIER" itemLabel="ENTREGADO A COURRIER"></f:selectItem>
+                                                <f:selectItem itemValue="SI RESIDE / SI TRABAJA" itemLabel="SI RESIDE / SI TRABAJA"></f:selectItem>
+                                                <f:selectItem itemValue="NO RESIDE / NO TRABAJA" itemLabel="NO RESIDE / NO TRABAJA"></f:selectItem>
+                                                <f:selectItem itemValue="DIRECCIÓN INCOMPLETA" itemLabel="DIRECCIÓN INCOMPLETA"></f:selectItem>
+                                                <f:selectItem itemValue="REHUSADO" itemLabel="REHUSADO"></f:selectItem>
+                                                <f:selectItem itemValue="CERRADO / NO ABRIERON" itemLabel="CERRADO / NO ABRIERON"></f:selectItem>
+                                                <f:selectItem itemValue="FALLECIDO" itemLabel="FALLECIDO"></f:selectItem>
+                                                <f:selectItem itemValue="DESISTIDO" itemLabel="DESISTIDO"></f:selectItem>
+                                            </h:selectOneMenu>
+                                        </div>
+                                    </div>
+                                    <div class="row col-lg-12">
+                                        <div class="col-lg-6">
+                                            Fecha gestión
+                                            <input type="date" class="form-control" jsf:value="#{cartasVisitasSession.fechaCapturadaString}" >  </input>                        
+                                        </div>
+                                        <div class="col-lg-6">
+                                            Observaciones
+                                            <h:inputText class="form-control" value="#{cartasVisitasSession.acv.observacion}" pt:required="true">
+                                            </h:inputText>
+                                        </div>
+                                    </div>
+                                    <div class="row col-lg-12">
+                                        <div class="col-lg-6">
+                                            <br/>
+                                            <h:commandButton class="btn btn-outline btn-primary btn-block"  value="Agregar gestión" action="#{cartasVisitasSession.agregarActuacionCartasVisitas()}" >
+                                            </h:commandButton>
+                                        </div>
+                                    </div>
+                                </h:form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- Modal agregar documentos-->
+        <div class="modal fade" id="agregarDocumentosVentana" tabindex="-1" role="dialog" aria-hidden="true">
+            <div  class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <h:form id="agregarDocumentosForm">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    #{cartasVisitasSession.limpiarCartasVisitas()}
+                                    <p></p>
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            Crear un documento
+                                        </div>
+                                        <div class="panel-body"  >
+                                            <div class="table-responsive" style="height: 250px; overflow-y: scroll" >
+                                                <h:form>
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <div class="col-lg-6">
+                                                                <p></p>
+                                                                Documento
+                                                                <h:selectOneMenu class="form-control" value="#{cartasVisitasSession.cv.tipo}" pt:required="true"  >
+                                                                    <f:selectItem itemValue="" itemLabel="Seleccione un documento"></f:selectItem>
+                                                                    <f:selectItem itemValue="CARTA 1" itemLabel="CARTA 1"></f:selectItem>
+                                                                    <f:selectItem itemValue="CARTA 2" itemLabel="CARTA 2"></f:selectItem>
+                                                                    <f:selectItem itemValue="VISITA 1" itemLabel="VISITA 1"></f:selectItem>
+                                                                </h:selectOneMenu>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <p></p>
+                                                                Courrier
+                                                                <h:selectOneMenu class="form-control" value="#{cartasVisitasSession.cv.courrier }" pt:required="true"  >
+                                                                    <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                                                    <f:selectItem itemValue="LTD EXPRESS" itemLabel="LTD EXPRESS"></f:selectItem>
+                                                                    <f:selectItem itemValue="4 72" itemLabel="4 72"></f:selectItem>
+                                                                    <f:selectItem itemValue="EL LIBERTADOR" itemLabel="EL LIBERTADOR"></f:selectItem>
+                                                                    <f:selectItem itemValue="INTERRAPIDÍSIMO" itemLabel="INTERRAPIDÍSIMO"></f:selectItem>
+                                                                    <f:selectItem itemValue="SERVIENTREGA" itemLabel="SERVIENTREGA"></f:selectItem>
+                                                                    <f:selectItem itemValue="OTRO" itemLabel="OTRO"></f:selectItem>
+
+                                                                </h:selectOneMenu>   
+
+                                                            </div>
+                                                        </div>        
+                                                    </div>
+                                                    <br></br>
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <div class="col-lg-6">
+                                                                Encargado
+                                                                <b:selectOneMenu  class="form-control" value="#{cartasVisitasSession.ecargadoCartasVisitas}">
+                                                                    <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                                                    <f:selectItems value="#{usuariosSession.traerTodosLosUsuariosActivos()}" var="c"  itemLabel="#{c.nombreUsuario}">
+                                                                    </f:selectItems>
+                                                                </b:selectOneMenu> 
+                                                                <p></p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-12">
+                                                        <h:commandButton value="Agregar documento"  class="btn btn-outline btn-primary btn-block" action="#{cartasVisitasSession.agregarCartasVisitas()}" type="submit" style="margin-top:8px" >
+                                                        </h:commandButton>
+                                                    </div>
+                                                </h:form>   
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </h:form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Modal editar documentos-->
+        <div class="modal fade" id="editarDocumentosVentana" tabindex="-1" role="dialog" aria-hidden="true">
+            <div  class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <h:form id="editarDocumentosForm">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <p></p>
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            Modificar un documento
+                                        </div>
+                                        <div class="panel-body" style="height: 150px; overflow-y: scroll"  >
+                                            <div class="table-responsive">
+                                                <h:form>
+                                                    <div class="col-lg-12">
+                                                        <div class="col-lg-6">
+                                                            <p></p>
+                                                            Guía
+                                                            <h:inputText class="form-control" value="#{cartasVisitasSession.cv.guia}" >
+                                                            </h:inputText>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <p></p>
+                                                            Courrier
+                                                            <h:selectOneMenu class="form-control" value="#{cartasVisitasSession.cv.courrier }" pt:required="true"  >
+                                                                <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                                                <f:selectItem itemValue="LTD EXPRESS" itemLabel="LTD EXPRESS"></f:selectItem>
+                                                                <f:selectItem itemValue="4 72" itemLabel="4 72"></f:selectItem>
+                                                                <f:selectItem itemValue="EL LIBERTADOR" itemLabel="EL LIBERTADOR"></f:selectItem>
+                                                                <f:selectItem itemValue="INTERRAPIDÍSIMO" itemLabel="INTERRAPIDÍSIMO"></f:selectItem>
+                                                                <f:selectItem itemValue="SERVIENTREGA" itemLabel="SERVIENTREGA"></f:selectItem>
+                                                                <f:selectItem itemValue="OTRO" itemLabel="OTRO"></f:selectItem>
+
+                                                            </h:selectOneMenu>   
+
+                                                        </div>
+                                                    </div>
+                                                    <hr></hr>
+                                                    <div class="col-lg-12">
+                                                        <div class="col-lg-12">
+                                                            <h:commandButton value="Modificar documento"  class="btn btn-outline btn-primary btn-block" action="#{cartasVisitasSession.modificarCartasVisitas()}" type="submit" style="margin-top:8px" >
+                                                            </h:commandButton>
+                                                        </div>
+                                                    </div>
+                                                </h:form>   
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </h:form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="../Recursos/vendor/jquery/jquery.min.js"></script>
+        <script src="../Recursos/vendor/bootstrap/js/bootstrap.min.js"></script>
+        <script src="../Recursos/vendor/metisMenu/metisMenu.min.js"></script>
+        <script src="../Recursos/vendor/datatables/js/jquery.dataTables.min.js"></script>
+        <script src="../Recursos/vendor/datatables-plugins/dataTables.bootstrap.min.js"></script>
+        <script src="../Recursos/vendor/datatables-responsive/dataTables.responsive.js"></script>
+        <script src="../Recursos/dist/js/ct.js"></script>
+
+    </body>
+</html>

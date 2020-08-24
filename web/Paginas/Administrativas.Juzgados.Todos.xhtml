@@ -1,0 +1,110 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:b="http://bootsfaces.net/ui">
+    <h:head>
+        <meta charset="utf-8"></meta>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"></meta>
+        <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+        <meta name="description" content=""></meta>
+        <meta name="author" content=""></meta>
+        <title>Herramientas de cobranza</title>
+        <link href="../Recursos/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+        <link href="../Recursos/vendor/metisMenu/metisMenu.min.css" rel="stylesheet"/>
+        <link href="../Recursos/vendor/datatables-plugins/dataTables.bootstrap.css" rel="stylesheet"/>
+        <link href="../Recursos/vendor/datatables-responsive/dataTables.responsive.css" rel="stylesheet"/>
+        <link href="../Recursos/dist/css/sb-admin-2.css" rel="stylesheet"/>
+        <link href="../Recursos/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+    </h:head>
+    <h:body>
+        <div id="wrapper">
+            <ui:include src="../Templates/aside.xhtml"/>
+            <ui:include src="../Templates/navbar.xhtml"/>
+            <div id="page-wrapper" jsf:rendered="#{iniciarSession.usuarioLogueado.rol !=  null}">
+                <br></br>
+                <!--Aquí todo el códito -->
+                <div class="row">
+                    #{juzgadosSession.limpiarJuzgados()}
+                    <div class="panel panel-primary">
+                        <div class="panel-heading col-lg-11">
+                            Gestión administrativa - Juzgados
+                        </div>
+                        <div class="col-lg-1">
+                            <a href="Administrativas.Juzgados.Crear.xhtml"><i class="fa fa-plus-square">
+                                </i> <br></br>Crear un juzgado</a>
+                        </div>
+                        <div class="panel-body">
+                            <div class="panel-body">
+                                <br></br>
+                                <br></br>
+                                <h:form>
+                                    <table class="table table-bordered" id="tablaUno" width="100%" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 70px;">Código</th>
+                                                <th>Nombre</th>
+                                                <th style="width: 100px;">Edificio</th>    
+                                                <th style="width: 100px;">Ciudad</th>
+                                                <th style="width: 50px;">Editar</th>
+                                            </tr>
+                                        </thead>
+                                        <tfoot>
+                                            <tr>
+                                                <th style="width: 70px;">Código</th>
+                                                <th>Nombre</th>
+                                                <th style="width: 100px;">Edificio</th>    
+                                                <th style="width: 100px;">Ciudad</th>
+                                                <th style="width: 50px;">Editar</th>
+                                            </tr>
+                                        </tfoot>
+                                        <tbody>
+                                            <ui:repeat value="#{juzgadosSession.traerTodosLosJuzgados()}" var="u">
+                                                <tr>
+                                                    <td>#{u.numero} #{u.codigoClase}</td>
+                                                    <td>#{u.nombre}</td>
+                                                    <td>#{u.edificio}</td>
+                                                    <td>#{u.idCiudad.ciudad}</td>
+                                                    <td>
+                                                        <b:commandButton style="background: #ff8300; border-color: #ff8300; font-weight:bold; "  class="btn btn-primary" action="#{juzgadosSession.guardarModificarJuzgado(u)}">
+                                                            <i class="fa fa-search"></i>
+                                                        </b:commandButton>
+                                                    </td>
+                                                </tr>
+                                            </ui:repeat>
+                                        </tbody>
+                                    </table>
+                                </h:form>             
+                            </div>
+                        </div>
+                    </div>
+                </div>   
+            </div>
+            <div jsf:rendered="#{iniciarSession.usuarioLogueado.rol ==  null}">
+                <div class="navbar-header">
+                    <a class="navbar-brand">Su sesión finalizó.
+                    </a>
+                </div>
+            </div>
+        </div>
+        <script src="../Recursos/vendor/jquery/jquery.min.js"></script>
+        <script src="../Recursos/vendor/bootstrap/js/bootstrap.min.js"></script>
+        <script src="../Recursos/vendor/metisMenu/metisMenu.min.js"></script>
+        <script src="../Recursos/vendor/datatables/js/jquery.dataTables.min.js"></script>
+        <script src="../Recursos/vendor/datatables-plugins/dataTables.bootstrap.min.js"></script>
+        <script src="../Recursos/vendor/datatables-responsive/dataTables.responsive.js"></script>
+        <script src="../Recursos/dist/js/ct.js"></script>
+        <script>
+            $(document).ready(function () {
+                $('#tablaUno').DataTable({
+                    responsive: true
+                });
+            });
+        </script>
+    </h:body>
+</html>
+

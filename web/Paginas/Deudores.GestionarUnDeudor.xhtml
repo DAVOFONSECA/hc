@@ -1,0 +1,1414 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <meta charset="utf-8"></meta>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"></meta>
+        <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+        <meta name="description" content=""></meta>
+        <meta name="author" content=""></meta>
+        <title>Herramientas de cobranza</title>
+        <link href="../Recursos/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+        <link href="../Recursos/vendor/metisMenu/metisMenu.min.css" rel="stylesheet"/>
+        <link href="../Recursos/vendor/datatables-plugins/dataTables.bootstrap.css" rel="stylesheet"/>
+        <link href="../Recursos/vendor/datatables-responsive/dataTables.responsive.css" rel="stylesheet"/>
+        <link href="../Recursos/dist/css/sb-admin-2.css" rel="stylesheet"/>
+        <link href="../Recursos/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+
+
+    </h:head>
+    <h:body>
+        <div id="wrapper">
+            <ui:include src="../Templates/aside.xhtml"/>
+            <ui:include src="../Templates/navbar.xhtml"/>
+            <div id="page-wrapper" jsf:rendered="#{iniciarSession.usuarioLogueado.rol !=  null}">
+                <br></br>
+
+                <!--Aquí todo el códito -->
+                <div class="row">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading col-lg-12">
+                            Deudores - Gestionar un deudor 
+                        </div>
+                        <div class="row">
+                        </div>
+                    </div>
+                    #{gestionesComercialesSession.limpiarGestionComercial()}
+                    #{compromisosSession.limpiarCompromisos()}
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <h:form> 
+
+
+                                <div class="input-group">
+                                    <h:inputText  value="#{deudoresSession.tipoNumeroIdentificacion}" class="form-control" pt:placeholder="Tipo y número de identificaión" ></h:inputText>
+                                    <span class="input-group-btn">
+                                        <b:commandButton class="btn btn-default" action="#{deudoresSession.encontrarUnDeudor()}">
+                                            <i class="fa fa-search"></i>
+                                        </b:commandButton>
+                                        <button class="btn btn-default" type="button">
+                                            <i class="fa fa-arrow-circle-right"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                                <br></br>
+                            </h:form>
+                        </div>
+                        <div class="col-lg-2">
+
+                        </div>
+                        <div class="col-lg-7">
+                            <b>
+                                <h5 style="color: #154360" jsf:rendered="#{deudoresSession.deudor.primerNombre !=  null}" > #{deudoresSession.deudor.primerNombre} #{deudoresSession.deudor.segundoNombre} #{deudoresSession.deudor.primerApellido} #{deudoresSession.deudor.segundoApellido}  </h5>
+                            </b>   
+                        </div>  
+                    </div>
+
+                    <div class="row">
+                        <!-- Perfil del deudor-->
+                        <div class="col-lg-5">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    Perfil
+                                </div>
+                                <div class="panel-body" style="height: 155px; " >
+                                    <div class="row" >
+                                        <div class="col-lg-2" >
+                                            Paquete:  
+                                        </div>
+                                        <div class="col-lg-10" >
+                                            <b> <h:outputText value="#{deudoresSession.deudor.paqueteComercial}" style="color: #0d6aad;"></h:outputText></b>
+                                        </div>
+
+                                    </div>
+                                    <br/>
+                                    <div class="row" >
+                                        <div class="col-lg-2" >
+                                            Gestor:
+                                        </div>
+                                        <div class="col-lg-4" >
+                                            <b> <h:outputText value="#{deudoresSession.deudor.idUsuario.nombreUsuario}" style="color: #0d6aad;"></h:outputText></b>
+                                        </div>
+                                        <div class="col-lg-6" >
+                                            Último contacto: 
+                                            <b> <h:outputText value="#{gestionesComercialesSession.traerUltimaFechaContactoTelefonico()}" style="color: #0d6aad;"></h:outputText></b>
+                                        </div>
+                                    </div>
+                                    <br/>
+                                    <div class="row" >
+                                        <div class="col-lg-2" >
+                                            Garantía:   
+                                        </div>
+                                        <div class="col-lg-10" >
+                                            <b> <h:outputText value="#{obligacionesSession.traerMejorGarantiaDeudor()}" style="color: #0d6aad;"></h:outputText></b>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    Obligaciones
+                                </div>
+                                <div class="panel-body" style="height: 155px; overflow-y: scroll"  >
+                                    <div class="table-responsive">
+                                        <h:form>
+                                            <table class="table table-hover" >
+                                                <thead>
+                                                    <td>Obligación</td>
+                                                    <td>Tipo</td>
+                                                    <td>Estado</td>
+                                                    <td style="width: 110px;">Capital</td>
+                                                    <td>Saldos</td>
+                                                    <td>Compromisos</td>
+                                                </thead>
+                                                <tbody>
+                                                    <ui:repeat var="o" value="#{obligacionesSession.traerObligacionesDeudor()}">
+                                                        <tr>
+                                                            <td style="vertical-align: middle;"><h:outputText value="#{o.numero}"  /></td >
+                                                            <td style="vertical-align: middle;"><h:outputText value="#{o.tipo}"  /></td >
+                                                            <td style="vertical-align: middle;"><h:outputText value="#{o.estado}"  />
+                                                            </td >
+                                                            <td style="vertical-align: middle;">$
+                                                                <h:outputText value="#{o.saldoCapital}"  >
+                                                                    <f:convertNumber minFractionDigits="0" />
+                                                                </h:outputText>
+                                                            </td >
+                                                            <td >
+                                                                <center>
+                                                                    <b:commandButton   class="btn btn-success" type="button" pt:data-toggle="modal" pt:data-target="#saldosObligaciones">
+                                                                        <f:ajax listener="#{obligacionesSession.consultarSaldosObligaciones(o)}" render="numeroObligacionSaldosForm saldosObligacionesForm garantiasForm"></f:ajax>
+                                                                        <i> $$ </i>
+                                                                    </b:commandButton>
+                                                                </center>
+                                                            </td >
+                                                            <td >
+                                                                <center>
+                                                                    <b:commandButton style="background: #ff8300; border-color: #ff8300; font-weight:bold; "  class="btn btn-primary" type="button" pt:data-toggle="modal" pt:data-target="#compromisosObligacionesVentana">
+                                                                        <f:ajax listener="#{obligacionesSession.consultarSaldosObligaciones(o)}" render="numeroObligacionCompromisosForm  listadoDeCompromisosForm crearCompromisosForm compromisosDeUnAcuerdoForm"></f:ajax>
+                                                                        <i class="fa fa-search"></i>
+                                                                    </b:commandButton>
+                                                                </center>
+                                                            </td >
+
+                                                        </tr>
+                                                    </ui:repeat>
+                                                </tbody>
+                                            </table>
+                                        </h:form>
+                                    </div>
+
+                                </div>   
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!-- Gestiones Comerciales.row -->
+                        <div class="col-lg-12">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <h:form id="contactosGestionesComercialesForm">
+                                        <h:commandButton value="☰" style="background-color: #005983;"  >
+                                            <f:ajax listener="#{gestionesComercialesSession.cambiarBoton()}" render="GestionesComercialesForm"></f:ajax>
+                                        </h:commandButton> 
+                                        Gestion Comercial
+                                    </h:form >
+                                </div>
+                                <div class="panel-body" style="height: 230px; overflow-y: scroll">
+                                    <h:form id="GestionesComercialesForm">
+                                        <table class="table table-hover" >
+                                            <thead>
+                                                <td >Fecha</td>
+                                                <td>Usuario</td>
+                                                <td>Gestión</td>
+                                                <td>Dato</td>
+                                                <td>Contacto</td>
+                                                <td>Mora</td>
+                                                <td>Resultado</td>
+                                                <td>Observaciones</td>
+                                                <td>📂</td>
+                                            </thead>
+                                            <tbody>
+                                                <ui:repeat var="g" value="#{gestionesComercialesSession.mostrarTodasLasGestionesComercialesDeudor()}">
+                                                    <tr>
+                                                        <td style="width: 100px" >
+                                                            <h:outputText value="#{g.fechaGestion}"  >
+                                                                <f:convertDateTime pattern="dd-MM-yyyy HH:mm " timeZone="America/Bogota"></f:convertDateTime>
+                                                            </h:outputText>
+                                                        </td >
+                                                        <td ><h:outputText value="#{g.idUsuario.nombreUsuario}"/></td >
+                                                        <td ><h:outputText value="#{g.gestion}"/></td >
+                                                        <td ><h:outputText value="#{g.dato}"/></td >
+                                                        <td ><h:outputText value="#{g.contacto}"/></td >
+                                                        <td ><h:outputText value="#{g.causaMora}"/></td >
+                                                        <td ><h:outputText value="#{g.resultado}"/></td >
+                                                        <td ><h:outputText value="#{g.observacion}"/></td >
+                                                        <td ><h:outputText value="#{g.adjunto}"/></td >
+                                                    </tr>
+                                                </ui:repeat>
+                                            </tbody>
+                                        </table>
+                                    </h:form>
+                                </div>
+                                <div class="panel-body">
+                                    <h:form id="formatoGestionesComerciales">
+                                        <hr></hr>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <label for="1">Gestión</label>
+                                                <b:selectOneMenu id="gestion" class="form-control" value="#{gestionesComercialesSession.gc.gestion}"  pt:required="true" >
+                                                    <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                                    <p:ajax listener="#{gestionesComercialesSession.traerGestion()}" update="resultado dato" />
+                                                    <f:selectItems value="#{gestionesComercialesSession.traerGestion()}" />
+                                                </b:selectOneMenu>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label for="2">Teléfono</label>
+                                                <b:selectOneMenu id="dato" value="#{gestionesComercialesSession.gc.dato}" >
+                                                    <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                                    <f:selectItem itemValue=" " itemLabel="SIN TELEFONO"></f:selectItem>
+                                                    <f:selectItems value="#{telefonosSession.traerTelefonosActivosDeudor()}" var="t" itemValue="#{t.telefono}" itemLabel="TELEFONO #{t.telefono}  E(#{((t.intentosEfectivos/t.intentos))*100})% " >
+                                                    </f:selectItems>
+                                                </b:selectOneMenu>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label for="4">Resultado</label>
+                                                <b:selectOneMenu id="resultado" value="#{gestionesComercialesSession.gc.resultado}" >
+                                                    <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                                    <p:ajax listener="#{gestionesComercialesSession.traerResultado()}" update="contacto" />
+                                                    <f:selectItems value="#{gestionesComercialesSession.traerResultado()}" />
+                                                </b:selectOneMenu>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label for="3">Contacto</label>
+                                                <b:selectOneMenu id="contacto" value="#{gestionesComercialesSession.gc.contacto}" >
+                                                    <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                                    <f:selectItems value="#{gestionesComercialesSession.traerContacto()}" />
+                                                </b:selectOneMenu>          
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <label for="validationCustom02">Causa mora</label>
+                                                <b:selectOneMenu pt:placeholder="INGRESE LA CAUSA DE LA MORA" class="form-control" value="#{gestionesComercialesSession.gc.causaMora}" pt:required="true"  >
+                                                    <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                                    <f:selectItem itemValue='SIN MOTIVO' itemLabel='SIN MOTIVO'></f:selectItem>                                               
+                                                    <f:selectItem itemValue='AUMENTO DE GASTOS' itemLabel='AUMENTO DE GASTOS'></f:selectItem>
+                                                    <f:selectItem itemValue='CALAMIDAD FAMILIAR' itemLabel='CALAMIDAD FAMILIAR'></f:selectItem>
+                                                    <f:selectItem itemValue='CALAMIDAD NATURAL' itemLabel='CALAMIDAD NATURAL'></f:selectItem>
+                                                    <f:selectItem itemValue='CLIENTE EN LA CARCEL' itemLabel='CLIENTE EN LA CARCEL'></f:selectItem>
+                                                    <f:selectItem itemValue='CLIENTE FUERA DE LA CIUDAD' itemLabel='CLIENTE FUERA DE LA CIUDAD'></f:selectItem>
+                                                    <f:selectItem itemValue='CREDITO TERCEROS' itemLabel='CREDITO TERCEROS'></f:selectItem>
+                                                    <f:selectItem itemValue='QUIEBRA' itemLabel='QUIEBRA'></f:selectItem>
+                                                    <f:selectItem itemValue='DEUDOR SOBREENDEUDADO' itemLabel='DEUDOR SOBREENDEUDADO'></f:selectItem>
+                                                    <f:selectItem itemValue='DIVORCIO -SEPARACION' itemLabel='DIVORCIO -SEPARACION'></f:selectItem>
+                                                    <f:selectItem itemValue='FALLECIDO' itemLabel='FALLECIDO'></f:selectItem>
+                                                    <f:selectItem itemValue='ILIQUIDEZ' itemLabel='ILIQUIDEZ'></f:selectItem>
+                                                    <f:selectItem itemValue='INCAPACIDAD PARA TRABAJAR' itemLabel='INCAPACIDAD PARA TRABAJAR'></f:selectItem>
+                                                    <f:selectItem itemValue='LEY DE VICTIMAS' itemLabel='LEY DE VICTIMAS'></f:selectItem>
+                                                    <f:selectItem itemValue='MICROEXTORSION' itemLabel='MICROEXTORSION'></f:selectItem>
+                                                    <f:selectItem itemValue='NO RECIBE EXTRACTO' itemLabel='NO RECIBE EXTRACTO'></f:selectItem>
+                                                    <f:selectItem itemValue='OPERATIVOS LIBRANZAS' itemLabel='OPERATIVOS LIBRANZAS'></f:selectItem>
+                                                    <f:selectItem itemValue='OTRAS PRIORIDADES' itemLabel='OTRAS PRIORIDADES'></f:selectItem>
+                                                    <f:selectItem itemValue='POSIBLE FALLECIDO' itemLabel='POSIBLE FALLECIDO'></f:selectItem>
+                                                    <f:selectItem itemValue='PROBLEMA SECTORIAL' itemLabel='PROBLEMA SECTORIAL'></f:selectItem>
+                                                    <f:selectItem itemValue='REDUCCION DE INGRESOS' itemLabel='REDUCCION DE INGRESOS'></f:selectItem>
+                                                    <f:selectItem itemValue='RENUENTE' itemLabel='RENUENTE'></f:selectItem>
+                                                    <f:selectItem itemValue='ROBO' itemLabel='ROBO'></f:selectItem>
+                                                    <f:selectItem itemValue='SIN EMPLEO' itemLabel='SIN EMPLEO'></f:selectItem>
+                                                    <f:selectItem itemValue='SIN VOLUNTAD DE PAGO' itemLabel='SIN VOLUNTAD DE PAGO'></f:selectItem>
+                                                </b:selectOneMenu>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="validationCustom02">Observaciones</label>
+                                                <input  jsf:value="#{gestionesComercialesSession.gc.observacion}" type="text"  class="form-control" id="validationCustom01"  placeholder="Ingrese aquí las observaciones de la gestión"  maxlength="500"  required="" />
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div style="margin-top: 25px;">
+                                                    <b:commandButton  class="btn btn-primary" action="#{gestionesComercialesSession.agregarGestionComercial()}" style="width: 240px">
+                                                        Ingresar gestión
+                                                    </b:commandButton>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </h:form>
+                                    <br></br>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <h:form>
+                                                <button class="btn btn-primary" onclick="mostrarOcultar()" type="button" style="width: 240px">Crear compromisos de pago</button>
+                                            </h:form>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+
+                    </div>
+
+                    <div class="row" id="ocultable">
+                        <div class="col-lg-12">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    Crear compromisos de pago
+                                </div>
+                                <div class="panel-body" >
+                                    <h:form id="crearCompromisosForm">
+                                        <div class="row">
+                                            <c:if test="#{compromisosSession.mensajeCompromisos!=''}">
+                                                <div class="alert alert-success">
+                                                    #{compromisosSession.mensajeCompromisos}
+                                                </div>
+                                            </c:if>
+
+                                            <div class="col-lg-2">
+                                                Obligación
+                                                <b:selectOneMenu class="form-control"  value="#{compromisosSession.compromisos.idObligacion}" >
+                                                    <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                                    <f:selectItem itemValue=" " itemLabel="SIN DATO"></f:selectItem>
+                                                    <f:selectItems value="#{obligacionesSession.traerObligacionesDeudorSinAcuerdos()}" var="t" itemValue="#{t}" itemLabel="#{t.numero} " >
+                                                    </f:selectItems>
+                                                </b:selectOneMenu>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                Valor cuota
+                                                <input jsf:value="#{compromisosSession.valorCuota}"  class="form-control" type="number" placeholder="Ingrese el valor"></input>
+                                            </div>
+                                            <div class="col-lg-1">
+                                                Plazo
+                                                <input jsf:value="#{compromisosSession.compromisos.plazo}"  class="form-control"  type="number"  min="1" max="180" placeholder="Ingrese el plazo"  ></input>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                Fecha inicial
+                                                <input type="date" class="form-control" jsf:value="#{compromisosSession.fechaInicial}" required="true">  </input>                        
+                                            </div>
+                                            <div class="col-lg-2">
+                                                Periodicidad
+                                                <h:selectOneMenu class="form-control" value="#{compromisosSession.periodos}" pt:required="true"  >
+                                                    <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                                    <f:selectItem itemValue="DIAS" itemLabel="DIARIO"></f:selectItem>
+                                                    <f:selectItem itemValue="MESES" itemLabel="MENSUAL"></f:selectItem>
+                                                </h:selectOneMenu>
+                                            </div>
+                                            <div class="col-lg-3">
+                                                <h7 style="color: white;">espacio</h7>
+                                                <h:commandButton action="#{compromisosSession.crearCompromisosDePago()}"  class="form-control btn btn-primary"   value="Agregar compromiso"  >
+                                                </h:commandButton> 
+                                            </div>
+
+                                        </div>
+                                    </h:form> 
+                                </div>
+                            </div> 
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="row">
+                        <!-- Telefonos-->
+                        <div class="col-lg-12">
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <h:form>
+                                        <h:commandButton value="✚" style="background-color: #005983;" pt:data-toggle="modal" pt:data-target="#agregarTelefonosVentana" >
+                                            <f:ajax listener="#{telefonosSession.limpiarTelefonos()}" render="agregarTelefonosForm"></f:ajax>
+                                        </h:commandButton>
+                                        Teléfonos
+                                    </h:form >
+                                </div>
+                                <div class="panel-body" style="height: 200px; overflow-y: scroll"  >
+
+                                    <div class="table-responsive">
+                                        <h:form id="telefonosForm">
+                                            <table class="table table-hover" >
+                                                <thead>
+                                                    <td>Teléfono</td>
+                                                    <td>Extensión</td>
+                                                    <td>Lugar</td>
+                                                    <td>Estado</td>
+                                                    <td style="width: 80px;">
+                                                        <center>
+                                                            Efectividad
+                                                        </center>
+                                                    </td>
+                                                    <td style="width: 80px;">
+                                                        <center>
+                                                            Activar
+                                                        </center>
+                                                    </td>
+                                                    <td style="width: 80px;">
+                                                        <center>
+                                                            Inactivar
+                                                        </center>
+                                                    </td>
+                                                    <td style="width: 80px;">
+                                                        <center>
+                                                            Mensaje
+                                                        </center>
+                                                    </td>
+                                                    <td style="width: 80px;">
+                                                        <center>Editar</center> 
+                                                    </td>
+                                                </thead>
+                                                <tbody>
+                                                    <ui:repeat var="t" value="#{telefonosSession.traerTodoslosTefonosDeUnDeudor()}">
+                                                        <tr>
+                                                            <td >#{t.codigoArea} #{t.telefono}</td >
+                                                            <td >#{t.extension}</td >
+                                                            <td >#{t.lugar} </td >
+                                                            <td >#{t.estado} </td >
+                                                            <td >#{((t.intentosEfectivos/t.intentos))*100}%
+                                                            </td >
+                                                            <td> 
+                                                                <center>
+                                                                    <h:commandButton  value="✔" action="#{telefonosSession.activarTelefono(t)}" class="btn btn-success">
+                                                                        <f:ajax    render="telefonosForm formatoGestionesComerciales GestionesComercialesForm"></f:ajax>
+                                                                    </h:commandButton>
+                                                                </center>
+                                                            </td>
+                                                            <td>
+                                                                <center>
+                                                                    <h:commandButton value="✘" action="#{telefonosSession.inactivarTelefono(t)}" class="btn btn-primary" style="background: red; border-color: red; font-weight:bold; color: white;"   >
+                                                                        <f:ajax    render="telefonosForm formatoGestionesComerciales GestionesComercialesForm"></f:ajax>
+                                                                    </h:commandButton>
+                                                                </center>   
+                                                            </td>
+                                                            <td >
+                                                                <center>
+                                                                    <h:commandButton value="📭"  action="#{telefonosSession.dejarMensaje(t)}" class="btn btn-primary" style="background: white; border-color: grey; font-weight:bold; color: white;"   >
+                                                                        <f:ajax    render=" telefonosForm formatoGestionesComerciales GestionesComercialesForm"></f:ajax>
+                                                                    </h:commandButton>
+                                                                </center>
+                                                            </td>
+                                                            <td>
+                                                                <center>
+                                                                    <h:commandButton value="✍" pt:data-toggle="modal" pt:data-target="#editarTelefonosVentana"  class="btn btn-primary" style="background: white; border-color: orange; font-weight:bold; color: white;" >
+                                                                        <f:ajax  listener="#{telefonosSession.guardarTelefono(t)}" render="editarTelefonosForm"></f:ajax>
+                                                                    </h:commandButton>
+                                                                </center>
+                                                            </td>
+                                                        </tr>
+                                                    </ui:repeat>
+                                                </tbody>
+                                            </table>
+                                        </h:form>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                    <div class="row">
+                        <!-- Direcciones.row -->
+                        <div class="col-lg-12" >
+                            <div class="panel panel-primary" >
+                                <div class="panel-heading" >
+                                    <h:form>
+                                        <h:commandButton value="✚" style="background-color: #005983;" pt:data-toggle="modal" pt:data-target="#agregarDireccionesVentana" >
+                                            <f:ajax  render="agregarDireccionesForm"></f:ajax>
+                                        </h:commandButton>
+                                        Direcciones físicas
+                                        #{direccionesSession.limpiarDirecciones()}
+                                    </h:form>
+                                </div>
+                                <div class="panel-body" style="height: 200px; overflow-y: scroll"  >
+
+                                    <div class="table-responsive">
+                                        <h:form id="direccionesFisicasForm">
+                                            <table class="table table-hover" >
+                                                <thead>
+                                                    <td>
+                                                        Dirección
+                                                    </td>
+                                                    <td>
+                                                        Ciudad
+                                                    </td>
+
+                                                    <td>
+                                                        Lugar
+                                                    </td>
+                                                    <td>
+                                                        Estado
+                                                    </td>
+                                                    <td>
+                                                        Efectividad
+                                                    </td>
+
+                                                    <td style="width: 80px;">
+                                                        <center>
+                                                            Activar
+                                                        </center>
+                                                    </td>
+                                                    <td style="width: 80px;">
+                                                        <center>
+                                                            Inactivar
+                                                        </center>
+                                                    </td>
+                                                    <td style="width: 80px;">
+                                                        <center>
+                                                            Gestionar
+                                                        </center>
+                                                    </td>
+                                                    <td style="width: 80px;">
+                                                        <center>
+                                                            Editar
+                                                        </center>
+                                                    </td>
+                                                </thead>
+                                                <tbody>
+                                                    <ui:repeat var="dir" value="#{direccionesSession.traerTodosLasDireccionesFisicasDeUnDeudor()}">
+                                                        <tr>
+                                                            <td >#{dir.direccion} #{dir.barrio} </td >
+                                                            <td >#{dir.idCiudad.ciudad}</td >
+                                                            <td >#{dir.lugar}</td >
+                                                            <td >#{dir.estado}</td >
+                                                            <td >#{((dir.intentosEfectivos/dir.intentos))*100}% </td >
+                                                            <td> 
+                                                                <center>
+                                                                    <h:commandButton  value="✔" action="#{direccionesSession.activarDireccion(dir)}" class="btn btn-success">
+                                                                        <f:ajax    render="direccionesFisicasForm GestionesComercialesForm"></f:ajax>
+                                                                    </h:commandButton>
+                                                                </center>
+                                                            </td>
+                                                            <td>
+                                                                <center>
+                                                                    <h:commandButton value="✘" action="#{direccionesSession.inactivarDireccion(dir)}" class="btn btn-primary" style="background: red; border-color: red; font-weight:bold; color: white;"   >
+                                                                        <f:ajax    render="direccionesFisicasForm GestionesComercialesForm"></f:ajax>
+                                                                    </h:commandButton>
+                                                                </center>   
+                                                            </td>
+
+                                                            <td >
+                                                                <center>
+                                                                    <h:commandButton value="📭"  action="#{cartasVisitasSession.guardarDireccionFisicaParaGestionar(dir)}" class="btn btn-primary" style="background: white; border-color: grey; font-weight:bold; color: white;"   >
+                                                                    </h:commandButton>
+                                                                </center>
+                                                            </td>
+
+                                                            <td >
+                                                                <center>
+                                                                    <h:commandButton value="✍" pt:data-toggle="modal" pt:data-target="#editarDireccionesVentana"  class="btn btn-primary" style="background: white; border-color: orange; font-weight:bold; color: white;" >
+                                                                        <f:ajax  listener="#{direccionesSession.guardarDireccion(dir)}" render="editarDireccionesForm"></f:ajax>
+                                                                    </h:commandButton>
+                                                                </center>
+                                                            </td>
+                                                        </tr>
+                                                    </ui:repeat>
+                                                </tbody>
+                                            </table>
+                                        </h:form>
+                                    </div>
+
+                                </div>                       
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <!-- Direcciones.row -->
+                        <div class="col-lg-12" >
+                            <div class="panel panel-primary" >
+                                <div class="panel-heading" >
+                                    <h:form>
+                                        <h:commandButton value="✚" style="background-color: #005983;" pt:data-toggle="modal" pt:data-target="#agregarDireccionesElectronicasVentana" >
+                                            <f:ajax  render="agregarDireccionesElectronicasVentana  "></f:ajax>
+                                        </h:commandButton>
+                                        Correos electrónicos
+                                    </h:form>
+                                </div>
+                                <div class="panel-body" style="height: 200px; overflow-y: scroll"  >
+
+                                    <div class="table-responsive">
+                                        <h:form id="direccionesElectronicasForm">
+                                            <table class="table table-hover" >
+                                                <thead>
+                                                    <td>
+                                                        Dirección
+                                                    </td>
+                                                    <td>
+                                                        Lugar
+                                                    </td>
+                                                    <td>
+                                                        Estado
+                                                    </td>
+                                                    <td>
+                                                        Efectividad
+                                                    </td>
+
+                                                    <td style="width: 80px;">
+                                                        <center>
+                                                            Activar
+                                                        </center>
+                                                    </td>
+                                                    <td style="width: 80px;">
+                                                        <center>
+                                                            Inactivar
+                                                        </center>
+                                                    </td>
+                                                    <td style="width: 80px;">
+                                                        <center>
+                                                            Gestionar
+                                                        </center>
+                                                    </td>
+                                                    <td style="width: 80px;">
+                                                        <center>
+                                                            Editar
+                                                        </center>
+                                                    </td>
+                                                </thead>
+                                                <tbody>
+                                                    <ui:repeat var="dir" value="#{direccionesSession.traerTodosLasDireccionesElectronicasDeUnDeudor()}">
+                                                        <tr>
+                                                            <td >#{dir.direccion} </td >
+                                                            <td >#{dir.lugar}</td >
+                                                            <td >#{dir.estado}</td >
+                                                            <td >#{((dir.intentosEfectivos/dir.intentos))*100}% </td >
+                                                            <td> 
+                                                                <center>
+                                                                    <h:commandButton  value="✔" action="#{direccionesSession.activarDireccion(dir)}" class="btn btn-success">
+                                                                        <f:ajax    render="direccionesElectronicasForm GestionesComercialesForm"></f:ajax>
+                                                                    </h:commandButton>
+                                                                </center>
+                                                            </td>
+                                                            <td>
+                                                                <center>
+                                                                    <h:commandButton value="✘" action="#{direccionesSession.inactivarDireccion(dir)}" class="btn btn-primary" style="background: red; border-color: red; font-weight:bold; color: white;"   >
+                                                                        <f:ajax    render="direccionesElectronicasForm GestionesComercialesForm"></f:ajax>
+                                                                    </h:commandButton>
+                                                                </center>   
+                                                            </td>
+
+                                                            <td >
+                                                                <center>
+                                                                    <h:commandButton value="📭"   class="btn btn-primary" style="background: white; border-color: grey; font-weight:bold; color: white;"   >
+                                                                    </h:commandButton>
+                                                                </center>
+                                                            </td>
+
+                                                            <td >
+                                                                <center>
+                                                                    <h:commandButton value="✍" pt:data-toggle="modal" pt:data-target="#editarDireccionesElectronicasVentana"  class="btn btn-primary" style="background: white; border-color: orange; font-weight:bold; color: white;" >
+                                                                        <f:ajax  listener="#{direccionesSession.guardarDireccion(dir)}" render="editarDireccionesElectronicasForm"></f:ajax>
+                                                                    </h:commandButton>
+                                                                </center>
+                                                            </td>
+                                                        </tr>
+                                                    </ui:repeat>
+                                                </tbody>
+                                            </table>
+                                        </h:form>
+                                    </div>
+
+                                </div>                       
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>   
+            </div>
+            <div jsf:rendered="#{iniciarSession.usuarioLogueado.rol ==  null}">
+                <div class="navbar-header">
+                    <a class="navbar-brand">Su sesión finalizó.
+                    </a>
+                </div>
+            </div>
+
+
+            <!--Ventanas modales-->
+            <!--1. Ventana modal saldos de las obligaciones-->
+            <div class="modal fade"  id="saldosObligaciones" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div style="width: 1200px;" class="modal-dialog" role="document">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-lg-11">
+                                    <h:form id="numeroObligacionSaldosForm">
+                                        Obligación #{obligacionesSession.obligacion.numero}
+                                    </h:form>
+                                </div>
+                                <div class="col-lg-1">
+                                    <button type="button" style="background: #4682B4" data-dismiss="modal">X</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body" style="height: 320px; overflow-y: scroll" >
+                            <h:form id="saldosObligacionesForm">
+                                <table class="table table-bordered"  width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th style="vertical-align: middle;">Tipo</th>
+                                            <th style="vertical-align: middle;">Subtipo</th>
+                                            <th style="vertical-align: middle; width: 110px;">Total</th>
+                                            <th style="vertical-align: middle; width: 110px;">Capital</th>
+                                            <th style="vertical-align: middle;">Dias mora</th>
+                                            <th style="vertical-align: middle;">Dia Caida</th>
+                                            <th style="vertical-align: middle;">Fecha actualización</th>
+                                            <th style="vertical-align: middle;">Fecha castigo</th>
+                                            <th style="vertical-align: middle;">Meta</th>
+                                            <th style="vertical-align: middle;">Estado</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+
+                                            <td>#{obligacionesSession.obligacion.tipo}</td>
+                                            <td>#{obligacionesSession.obligacion.subTipo}</td>
+                                            <td>$
+                                                <h:outputText value="#{obligacionesSession.obligacion.saldoTotal}"  >
+                                                    <f:convertNumber minFractionDigits="0" />
+                                                </h:outputText>
+                                            </td>
+                                            <td>$
+                                                <h:outputText value="#{obligacionesSession.obligacion.saldoCapital}"  >
+                                                    <f:convertNumber minFractionDigits="0" />
+                                                </h:outputText>
+                                            </td>
+                                            <td>#{obligacionesSession.obligacion.diasMora}</td>
+                                            <td>#{obligacionesSession.obligacion.diaCaida}</td>
+                                            <td>
+                                                <h:outputText value="#{obligacionesSession.obligacion.fechaUltimaActualizacion}"  >
+                                                    <f:convertDateTime pattern="dd-MM-yyyy"></f:convertDateTime>
+                                                </h:outputText>
+                                            </td>
+                                            <td>
+                                                <h:outputText value="#{obligacionesSession.obligacion.fechaCastigo}">
+                                                    <f:convertDateTime pattern="dd-MM-yyyy"></f:convertDateTime>
+                                                </h:outputText>
+                                            </td>
+                                            <td>#{obligacionesSession.obligacion.meta}</td>
+                                            <td>#{obligacionesSession.obligacion.estado}</td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </h:form>
+                            <br></br>
+
+                            <h:form id="garantiasForm">
+                                <table class="table table-bordered"  width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th style="vertical-align: middle;">Tipo</th>
+                                            <th style="vertical-align: middle;">Tipo identificación garantía</th>
+                                            <th style="vertical-align: middle;">Identificación</th>
+                                            <th style="vertical-align: middle;">Especificación</th>
+                                            <th style="vertical-align: middle;">Estado</th>
+                                            <th style="vertical-align: middle;">Observaciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <ui:repeat value="#{obligacionesSession.traerGarantiasDeLasOligaciones(obligacionesSession.obligacion)}" var="z">
+                                            <tr>
+                                                <td>#{z.tipo}</td>
+                                                <td>#{z.tipoIdentificacion}</td>
+                                                <td>#{z.numeroIdentificacion}</td>
+                                                <td>#{z.especificacion}</td>
+                                                <td>#{z.estado}</td>
+                                                <td>#{z.observacion}</td>
+                                            </tr>
+                                        </ui:repeat>
+                                    </tbody>
+                                </table>
+                            </h:form> 
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--2. Ventana compromisos-->
+            <div class="modal fade"  id="compromisosObligacionesVentana" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div style="width: 1200px;" class="modal-dialog" role="document">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-lg-11">
+                                    <h:form id="numeroObligacionCompromisosForm">
+                                        Compromisos Obligación #{obligacionesSession.obligacion.numero}
+                                    </h:form>
+                                </div>
+                                <div class="col-lg-1">
+                                    <button type="button" style="background: #4682B4" data-dismiss="modal">X</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body" style="height: 500px;" >
+                            <div class="row">
+                                <div class="col-lg-4">
+
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            Listado de compromisos
+                                        </div>
+                                        <div class="panel-body" style="height: 290px; overflow-y: scroll" >
+                                            <h:form id="listadoDeCompromisosForm">
+                                                <table class="table table-bordered"  width="100%" cellspacing="0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="vertical-align: middle;">Fecha</th>
+                                                            <th style="vertical-align: middle;">Plazo</th>
+                                                            <th style="vertical-align: middle;">Estado</th>
+                                                            <th style="vertical-align: middle;">Ver</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <ui:repeat value="#{compromisosSession.traerCompromisosDeUnaObligaciones()}" var="b">
+                                                            <tr>
+                                                                <td>
+                                                                    <h:outputText value="#{b.fechaCreacion}"  >
+                                                                        <f:convertDateTime pattern="dd-MM-yyyy"></f:convertDateTime>
+                                                                    </h:outputText>
+                                                                </td>
+                                                                <td>
+                                                                    <h:outputText value="#{b.plazo}"  >
+                                                                    </h:outputText>
+                                                                </td>
+                                                                <td>#{b.estado}</td>
+                                                                <td>      
+                                                                    <b:commandButton style="background: #ff8300; border-color: #ff8300; font-weight:bold; "  class="btn btn-primary" action="#{compromisosSession.guardarCompromiso(b)}">
+                                                                        <i class="fa fa-search">
+                                                                            <f:ajax    render="compromisosDeUnAcuerdoForm romperCompromisos"></f:ajax>
+                                                                        </i>
+                                                                    </b:commandButton>
+                                                                </td>
+                                                            </tr>
+                                                        </ui:repeat>
+                                                    </tbody>
+                                                </table>
+                                            </h:form> 
+                                        </div>
+                                    </div>
+
+
+                                </div>    
+                                <div class="col-lg-8">
+
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            Acuerdo de pagos
+                                        </div>
+                                        <div class="panel-body" style="height: 290px; overflow-y: scroll" >
+
+
+                                            <h:form id="compromisosDeUnAcuerdoForm">
+
+                                                <table class="table table-bordered"  width="100%" cellspacing="0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="vertical-align: middle;">No.</th>
+                                                            <th style="vertical-align: middle;">Fecha cuota</th>
+                                                            <th style="vertical-align: middle;">Valor cuota</th>
+                                                            <th style="vertical-align: middle;">Estado cuota</th>
+                                                            <th style="vertical-align: middle;">Ver cuota</th>
+                                                            <th style="vertical-align: middle;">Reportar pago</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <ui:repeat value="#{compromisosSession.traerTodosLasCuotasDeUnCompromiso()}" var="u">
+                                                            <tr>
+                                                                <td>
+                                                                    #{u.numeroCuota}
+                                                                </td>
+                                                                <td>
+                                                                    <h:outputText value="#{u.fechaCuota}"  >
+                                                                        <f:convertDateTime pattern="dd-MM-yyyy"></f:convertDateTime>
+                                                                    </h:outputText>
+                                                                </td>
+                                                                <td>$
+                                                                    <h:outputText value="#{u.valorCuota}"  >
+                                                                        <f:convertNumber minFractionDigits="0" />
+                                                                    </h:outputText>
+                                                                </td>
+                                                                <td>#{u.estado}</td>
+                                                                <td>      
+                                                                    <center>
+                                                                        <b:commandButton style="background: #ff8300; border-color: #ff8300; font-weight:bold; "  class="btn btn-primary" action="#{compromisosSession.guardarCuota(u)}">
+                                                                            <i class="fa fa-search">
+                                                                                <f:ajax    render="cuotaForm"></f:ajax>
+                                                                            </i>
+                                                                        </b:commandButton>
+                                                                    </center>      
+                                                                </td>
+                                                                <td><center>
+                                                                        <b:commandButton class="btn btn-success" action="#{compromisosSession.reportarCuotaPaga(u)}">
+                                                                            <i class="fa fa-money">
+                                                                                <f:ajax    render="compromisosDeUnAcuerdoForm crearCompromisosForm"></f:ajax>
+                                                                            </i>
+                                                                        </b:commandButton></center>      
+                                                                </td>
+
+                                                            </tr>
+                                                        </ui:repeat>
+                                                    </tbody>
+                                                </table>
+                                            </h:form> 
+
+                                            <h:form id="romperCompromisos">
+                                                <b:commandButton  value="Romper compromiso #{compromisosSession.compromisos.idAcuerdo}" style="background: red; border-color: red; font-weight:bold; "  class="btn btn-primary" action="#{compromisosSession.romperCompromisoYCuotas()}">
+                                                    <f:ajax    render="listadoDeCompromisosForm"></f:ajax>
+                                                </b:commandButton>
+                                            </h:form>  
+                                        </div>
+
+                                    </div>
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            Modificar cuota
+                                        </div>
+                                        <div class="panel-body" style="height: 80px; " >
+                                            <h:form id="cuotaForm">
+                                                <div class="col-lg-3">
+                                                    Valor cuota
+                                                    <input jsf:value="#{compromisosSession.cuota.valorCuota}"  class="form-control" type="number" placeholder="Ingrese el valor"></input>
+                                                </div>
+                                                <div class="col-lg-3">
+                                                    Fecha inicial 
+                                                    <input type="date" class="form-control" jsf:value="#{compromisosSession.fechaCuota}" required="true">  </input>                        
+                                                </div>
+
+                                                <div class="col-lg-3">
+                                                    <h7 style="color: white;">espacio</h7>
+                                                    <b:commandButton class="btn btn-primary"  action="#{compromisosSession.modificarCuota()}"  style="width: 200px;" >Modificar
+                                                    </b:commandButton>
+                                                </div>
+
+                                            </h:form> 
+                                        </div>
+                                    </div>
+                                </div>        
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!-- 3. Modal Modificar Telefonos-->
+            <div  class="modal fade" id="editarTelefonosVentana" tabindex="-1" role="dialog" aria-hidden="true">
+                <div  style="width: 520px; " class="modal-dialog modal-dialog-centered" role="document"  >
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <h:form id="editarTelefonosForm">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <p></p>
+                                        <p></p>
+                                        <p></p>
+                                        <div  class="panel panel-primary">
+                                            <div class="panel-heading">
+                                                Modificar teléfono. #{telefonosSession.telefono.telefono}
+                                            </div>
+                                            <div class="panel-body"   >
+                                                <div  class="table-responsive">
+                                                    <h:form  >
+                                                        <div class="row">
+                                                            <div class="col-lg-12">
+                                                                <div class="col-lg-6">
+                                                                    Indicativo
+                                                                    <input  jsf:value="#{telefonosSession.telefono.codigoArea}" type="number"   class="form-control" placeholder="Ingrese el indicativo" min="0" minlength="1" maxlength="4"   />
+                                                                    <br/>
+                                                                    Extensión
+                                                                    <input  jsf:value="#{telefonosSession.telefono.extension}" type="number"   class="form-control" placeholder="Ingrese la extensión" min="0" minlength="1" maxlength="6"   />
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    Tipo
+                                                                    <b:selectOneMenu class="form-control" value="#{telefonosSession.telefono.tipo}" pt:required="true"  >
+                                                                        <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                                                        <f:selectItem itemValue="FIJO" itemLabel="FIJO"></f:selectItem>
+                                                                        <f:selectItem itemValue="CELULAR" itemLabel="CELULAR"></f:selectItem>
+                                                                    </b:selectOneMenu>
+                                                                    Lugar
+                                                                    <b:selectOneMenu class="form-control" value="#{telefonosSession.telefono.lugar}" pt:required="true"  >
+                                                                        <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                                                        <f:selectItem itemValue="PERSONAL" itemLabel="PERSONAL"></f:selectItem>
+                                                                        <f:selectItem itemValue="TRABAJO" itemLabel="TRABAJO"></f:selectItem>
+                                                                        <f:selectItem itemValue="RESIDENCIA" itemLabel="RESIDENCIA"></f:selectItem>
+                                                                        <f:selectItem itemValue="REFERENCIA" itemLabel="REFERENCIA"></f:selectItem>
+                                                                        <f:selectItem itemValue="OTRO" itemLabel="OTRO"></f:selectItem>
+                                                                    </b:selectOneMenu>
+                                                                </div>    
+                                                            </div>
+                                                        </div>
+
+                                                        <div  class="row">
+                                                            <div class="col-lg-12">
+                                                                <div class="col-lg-12">
+                                                                    <hr></hr>
+                                                                    <h:commandButton class="btn btn-outline btn-primary btn-block" value="Modificar teléfono" action="#{telefonosSession.modificarTelefono()}" type="submit" style="margin-top:8px">
+                                                                    </h:commandButton>    
+                                                                    <br/>             
+
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </h:form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </h:form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!-- 4. Modal Agregar Telefonos-->
+            <div  class="modal fade" id="agregarTelefonosVentana" tabindex="-1" role="dialog" aria-hidden="true">
+                <div  style="width: 500px;" class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <h:form id="agregarTelefonosForm">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <p></p>
+                                        <p></p>
+                                        <p></p>
+                                        <div  class="panel panel-primary">
+                                            <div class="panel-heading">
+                                                Agregar teléfono
+                                            </div>
+                                            <div class="panel-body"   >
+                                                <div  class="table-responsive">
+                                                    <h:form  >
+                                                        <div class="row">
+                                                            <div class="col-lg-12">
+                                                                <div class="col-lg-6">
+                                                                    Indicativo
+                                                                    <input  jsf:value="#{telefonosSession.telefono.codigoArea}" type="number"   class="form-control" placeholder="Ingrese el indicativo" min="0" minlength="1" maxlength="4"   />
+                                                                    <br/>
+                                                                    Teléfono
+                                                                    <input  jsf:value="#{telefonosSession.telefono.telefono}" type="text"  class="form-control"  placeholder="Digite aquí el teléfono" minlength="7" maxlength="10"  required="true" />
+                                                                    <br/>
+                                                                    Extensión
+                                                                    <input value="#{telefonosSession.telefono.extension}"  type="number" class="form-control"  pt:placeholder="Ingrese el número de extensión"  pt:minlength="1" maxlength="6"/>
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    Tipo
+                                                                    <b:selectOneMenu class="form-control" value="#{telefonosSession.telefono.tipo}" pt:required="true"  >
+                                                                        <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                                                        <f:selectItem itemValue="FIJO" itemLabel="FIJO"></f:selectItem>
+                                                                        <f:selectItem itemValue="CELULAR" itemLabel="CELULAR"></f:selectItem>
+                                                                    </b:selectOneMenu>
+                                                                    Lugar
+                                                                    <b:selectOneMenu class="form-control" value="#{telefonosSession.telefono.lugar}" pt:required="true"  >
+                                                                        <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                                                        <f:selectItem itemValue="PERSONAL" itemLabel="PERSONAL"></f:selectItem>
+                                                                        <f:selectItem itemValue="TRABAJO" itemLabel="TRABAJO"></f:selectItem>
+                                                                        <f:selectItem itemValue="RESIDENCIA" itemLabel="RESIDENCIA"></f:selectItem>
+                                                                        <f:selectItem itemValue="REFERENCIA" itemLabel="REFERENCIA"></f:selectItem>
+                                                                        <f:selectItem itemValue="OTRO" itemLabel="OTRO"></f:selectItem>
+                                                                    </b:selectOneMenu>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+
+                                                        <div  class="row">
+                                                            <div class="col-lg-12">
+                                                                <div class="col-lg-12">
+                                                                    <hr></hr>
+                                                                    <h:commandButton class="btn btn-outline btn-primary btn-block" value="Agregar un teléfono" action="#{telefonosSession.agregarTelefono()}" type="submit" style="margin-top:8px">
+                                                                    </h:commandButton>
+
+                                                                </div>
+                                                                <br/>
+                                                            </div>
+
+                                                        </div>
+                                                    </h:form>
+                                                </div>
+
+                                            </div>
+                                            <!-- /.panel-body -->
+                                        </div>
+                                        <!-- /.panel -->
+                                    </div>
+                                </div>
+                            </h:form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- 5. Modal Agregar Direcciones-->
+            <div  class="modal fade" id="agregarDireccionesVentana" tabindex="-1" role="dialog" aria-hidden="true">
+                <div  style="width: 500px;" class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <h:form id="agregarDireccionesForm">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div  class="panel panel-primary">
+                                            <div class="panel-heading">
+                                                Agregar una dirección física
+                                            </div>
+                                            <div class="panel-body"   >
+                                                <div  class="table-responsive">
+                                                    <h:form  >
+                                                        <div class="row">
+                                                            <div class="col-md-6 mb-3">
+                                                                <br/>
+                                                                Dirección
+                                                                <h:inputText value="#{direccionesSession.direccion.direccion}"  class="form-control"  pt:placeholder="Ingrese la dirección" pt:minlength="10"  pt:maxlength="100" pt:required="true"/>
+                                                                <br/>
+                                                                Barrio
+                                                                <h:inputText value="#{direccionesSession.direccion.barrio}"  class="form-control"  pt:placeholder="Ingrese el nombre del barrio" pt:minlength="3"  pt:maxlength="20" />
+                                                                <br/>
+                                                                Localidad
+                                                                <h:inputText value="#{direccionesSession.direccion.localidad}"  class="form-control" pt:placeholder="Ingrese el nombre la localidad" pt:minlength="3"  pt:maxlength="20" />
+                                                                <br/>
+
+                                                            </div>
+                                                            <div class="col-md-6 mb-3">
+                                                                <br/>
+                                                                Ciudad
+                                                                <b:selectOneMenu class="form-control" value="#{direccionesSession.direccion.idCiudad}" pt:required="true">
+                                                                    <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                                                    <f:selectItems value="#{juzgadosSession.traerTodosLasCiudades()}" var="c" itemLabel="#{c.ciudad} - #{c.departamento}">
+                                                                    </f:selectItems>
+                                                                </b:selectOneMenu>
+                                                                Lugar
+                                                                <b:selectOneMenu class="form-control" value="#{direccionesSession.direccion.lugar}" pt:required="true"  >
+                                                                    <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                                                    <f:selectItem itemValue="PERSONAL" itemLabel="PERSONAL"></f:selectItem>
+                                                                    <f:selectItem itemValue="TRABAJO" itemLabel="TRABAJO"></f:selectItem>
+                                                                    <f:selectItem itemValue="RESIDENCIA" itemLabel="RESIDENCIA"></f:selectItem>
+                                                                    <f:selectItem itemValue="CORRESPONDENCIA" itemLabel="CORRESPONDENCIA"></f:selectItem>
+                                                                    <f:selectItem itemValue="OTRO" itemLabel="OTRO"></f:selectItem>
+                                                                </b:selectOneMenu>
+                                                                <h5 style="color: white;">espacio</h5>
+                                                                <h:commandButton value="Agregar una dirección física" action="#{direccionesSession.agregarDireccionFisica()}" class="btn btn-outline btn-primary btn-block" type="submit" style="margin-top:8px" >
+                                                                </h:commandButton>
+                                                            </div>
+                                                        </div>
+
+                                                    </h:form>
+                                                </div>
+
+                                            </div>
+                                            <!-- /.panel-body -->
+                                        </div>
+                                        <!-- /.panel -->
+                                    </div>
+                                </div>
+                            </h:form>
+                        </div>
+                    </div>
+                </div>
+            </div>      
+
+
+
+            <!-- 6.  Modal Editar Direcciones-->
+            <div  class="modal fade" id="editarDireccionesVentana" tabindex="-1" role="dialog" aria-hidden="true">
+                <div  style="width: 500px;" class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <h:form id="editarDireccionesForm">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <p></p>
+                                        <p></p>
+                                        <p></p>
+                                        <div  class="panel panel-primary">
+                                            <div class="panel-heading">
+                                                Modificar una dirección. #{direccionesSession.direccion.direccion}  #{direccionesSession.direccion.idCiudad.ciudad}
+                                            </div>
+                                            <div class="panel-body"   >
+                                                <div  class="table-responsive">
+                                                    <h:form  >
+                                                        <div class="row">
+                                                            <div class="col-md-6 mb-3">
+                                                                <br/>
+                                                                Barrio
+                                                                <h:inputText value="#{direccionesSession.direccion.barrio}"  class="form-control"  pt:placeholder="Ingrese el nombre del barrio" pt:minlength="3"  pt:maxlength="20" />
+                                                                <br/>
+                                                                Localidad
+                                                                <h:inputText value="#{direccionesSession.direccion.localidad}"  class="form-control" pt:placeholder="Ingrese el nombre la localidad" pt:minlength="3"  pt:maxlength="20" />
+                                                                <br/>
+
+                                                            </div>
+                                                            <div class="col-md-6 mb-3">
+                                                                <br/>
+                                                                Lugar
+                                                                <b:selectOneMenu class="form-control" value="#{direccionesSession.direccion.lugar}" pt:required="true"  >
+                                                                    <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                                                    <f:selectItem itemValue="PERSONAL" itemLabel="PERSONAL"></f:selectItem>
+                                                                    <f:selectItem itemValue="TRABAJO" itemLabel="TRABAJO"></f:selectItem>
+                                                                    <f:selectItem itemValue="RESIDENCIA" itemLabel="RESIDENCIA"></f:selectItem>
+                                                                    <f:selectItem itemValue="CORRESPONDENCIA" itemLabel="CORRESPONDENCIA"></f:selectItem>
+                                                                    <f:selectItem itemValue="OTRO" itemLabel="OTRO"></f:selectItem>
+                                                                </b:selectOneMenu>
+                                                                <h5 style="color: white;">espacio</h5>
+                                                                <h:commandButton value="Modificar dirección" action="#{direccionesSession.modificar()}" class="btn btn-outline btn-primary btn-block" type="submit" style="margin-top:8px" >
+                                                                </h:commandButton>
+                                                            </div>
+                                                        </div>
+
+                                                    </h:form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </h:form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. Modal Agregar Direcciones Electrónicas-->
+            <div  class="modal fade" id="agregarDireccionesElectronicasVentana" tabindex="-1" role="dialog" aria-hidden="true">
+                <div  style="width: 500px;" class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <h:form id="agregarDireccionesElectronicasForm">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div  class="panel panel-primary">
+                                            <div class="panel-heading">
+                                                Agregar una dirección electrónica
+                                            </div>
+                                            <div class="panel-body"   >
+                                                <div  class="table-responsive">
+                                                    <h:form  >
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <br/>
+                                                                Dirección
+                                                                <h:inputText  value="#{direccionesSession.direccion.direccion}"  class="form-control"  pt:placeholder="Ingrese la dirección de correo" pt:minlength="5"  pt:maxlength="100" pt:required="true" ></h:inputText>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <br/>
+                                                            <div class="col-md-6 mb-3">
+                                                                Lugar
+                                                                <b:selectOneMenu class="form-control" value="#{direccionesSession.direccion.lugar}" pt:required="true"  >
+                                                                    <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                                                    <f:selectItem itemValue="PERSONAL" itemLabel="PERSONAL"></f:selectItem>
+                                                                    <f:selectItem itemValue="TRABAJO" itemLabel="TRABAJO"></f:selectItem>
+                                                                    <f:selectItem itemValue="RESIDENCIA" itemLabel="RESIDENCIA"></f:selectItem>
+                                                                    <f:selectItem itemValue="CORRESPONDENCIA" itemLabel="CORRESPONDENCIA"></f:selectItem>
+                                                                    <f:selectItem itemValue="OTRO" itemLabel="OTRO"></f:selectItem>
+                                                                </b:selectOneMenu> 
+                                                            </div>
+                                                            <div class="col-md-6 mb-3">
+                                                                <div style=" margin-top: 20px">
+                                                                    <h:commandButton value="Agregar una dirección" action="#{direccionesSession.agregarDireccionElectronica()}" class="btn btn-outline btn-primary btn-block" type="submit" style="margin-top:8px" >
+                                                                    </h:commandButton>    
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </h:form>
+                                                </div>
+
+                                            </div>
+                                            <!-- /.panel-body -->
+                                        </div>
+                                        <!-- /.panel -->
+                                    </div>
+                                </div>
+                            </h:form>
+                        </div>
+                    </div>
+                </div>
+            </div>      
+
+
+
+            <!-- 8.  Modal Editar Direcciones Electrónicas-->
+            <div  class="modal fade" id="editarDireccionesElectronicasVentana" tabindex="-1" role="dialog" aria-hidden="true">
+                <div  style="width: 500px;" class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <h:form id="editarDireccionesElectronicasForm">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <p></p>
+                                        <p></p>
+                                        <p></p>
+                                        <div  class="panel panel-primary">
+                                            <div class="panel-heading">
+                                                Modificar una dirección. #{direccionesSession.direccion.direccion}  
+                                            </div>
+                                            <div class="panel-body"   >
+                                                <div  class="table-responsive">
+                                                    <h:form  >
+
+                                                        <div class="row">
+
+                                                            <div class="col-md-6 mb-3">
+                                                                Lugar
+                                                                <b:selectOneMenu class="form-control" value="#{direccionesSession.direccion.lugar}" pt:required="true"  >
+                                                                    <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                                                    <f:selectItem itemValue="PERSONAL" itemLabel="PERSONAL"></f:selectItem>
+                                                                    <f:selectItem itemValue="TRABAJO" itemLabel="TRABAJO"></f:selectItem>
+                                                                    <f:selectItem itemValue="RESIDENCIA" itemLabel="RESIDENCIA"></f:selectItem>
+                                                                    <f:selectItem itemValue="CORRESPONDENCIA" itemLabel="CORRESPONDENCIA"></f:selectItem>
+                                                                    <f:selectItem itemValue="OTRO" itemLabel="OTRO"></f:selectItem>
+                                                                </b:selectOneMenu> 
+                                                            </div>
+                                                            <div class="col-md-6 mb-3">
+                                                                <div style=" margin-top: 20px">
+                                                                    <h:commandButton value="Modificar dirección" action="#{direccionesSession.modificarDireccionElectronica()}" class="btn btn-outline btn-primary btn-block" type="submit" style="margin-top:8px" >
+                                                                    </h:commandButton>    
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </h:form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </h:form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+
+        <script src="../Recursos/vendor/jquery/jquery.min.js"></script>
+        <script src="../Recursos/vendor/bootstrap/js/bootstrap.min.js"></script>
+        <script src="../Recursos/vendor/metisMenu/metisMenu.min.js"></script>
+        <script src="../Recursos/vendor/datatables/js/jquery.dataTables.min.js"></script>
+        <script src="../Recursos/vendor/datatables-plugins/dataTables.bootstrap.min.js"></script>
+        <script src="../Recursos/vendor/datatables-responsive/dataTables.responsive.js"></script>
+        <script src="../Recursos/dist/js/ct.js"></script>
+    </h:body>
+    <script>
+                                                    $(document).ready(function () {
+                                                        $('#tablaUno').DataTable({
+                                                            responsive: true
+                                                        });
+                                                    });
+    </script>
+
+    <script>
+        element = document.getElementById('ocultable');
+        element.style.display = 'none';
+        
+        function mostrarOcultar() {
+            element = document.getElementById('ocultable');
+            estado = element.style.display;
+            if (estado == 'none') {
+                element.style.display = 'block'
+            } else {
+                element.style.display = 'none';
+            }
+            
+        }
+        
+    </script>
+
+    <script>
+        element = document.getElementById('ocultable2');
+        element.style.display = 'none';
+        
+        function mostrarOcultar2() {
+            element = document.getElementById('ocultable2');
+            estado = element.style.display;
+            if (estado == 'none') {
+                element.style.display = 'block'
+            } else {
+                element.style.display = 'none';
+            }
+            
+        }
+        
+    </script>
+
+
+</html>
+

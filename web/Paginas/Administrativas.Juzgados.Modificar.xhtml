@@ -1,0 +1,185 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:b="http://bootsfaces.net/ui">
+    <h:head>
+        <meta charset="utf-8"></meta>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"></meta>
+        <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+        <meta name="description" content=""></meta>
+        <meta name="author" content=""></meta>
+        <title>Herramientas de cobranza</title>
+        <link href="../Recursos/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+        <link href="../Recursos/vendor/metisMenu/metisMenu.min.css" rel="stylesheet"/>
+        <link href="../Recursos/vendor/datatables-plugins/dataTables.bootstrap.css" rel="stylesheet"/>
+        <link href="../Recursos/vendor/datatables-responsive/dataTables.responsive.css" rel="stylesheet"/>
+        <link href="../Recursos/dist/css/sb-admin-2.css" rel="stylesheet"/>
+        <link href="../Recursos/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+    </h:head>
+    <h:body>
+        <div id="wrapper">
+            <ui:include src="../Templates/aside.xhtml"/>
+            <ui:include src="../Templates/navbar.xhtml"/>
+            <div id="page-wrapper" jsf:rendered="#{iniciarSession.usuarioLogueado.rol !=  null}">
+                <br></br>
+
+                <!--Aquí todo el códito -->
+                <div class="row">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading col-lg-11">
+                            Gestión administrativa - Modificar juzgado #{juzgadosSession.juzgado.nombre}
+                        </div>
+                        <div class="col-lg-1">
+                            <a href="Administrativas.Juzgados.Todos.xhtml"><i class="fa fa-backward">
+                                </i> <br></br>Volver</a>
+                        </div>
+                        <div class="panel-body">
+                            <div class="panel-body">
+                                <br></br>
+                                <br></br>
+                                <c:if test="#{juzgadosSession.mensajeModificarJuzgado!=''}">
+                                    <div class="alert alert-success">
+                                        #{juzgadosSession.mensajeModificarJuzgado}
+                                    </div>
+                                </c:if>
+                                <h:form>
+                                    <div class="row">
+                                        <div class="col-lg-9">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    Nombre del juzgado/Alcaldía
+                                                    <input  jsf:value="#{juzgadosSession.juzgado.nombre}" type="text"  class="form-control"  placeholder="Digite aquí el nombre completo del juzgado" minlength="3" maxlength="150"  required="true" />
+                                                </div>
+                                            </div>
+                                            <p></p>
+
+                                            <div class="row">
+                                                <div class="col-lg-4">
+                                                    Número
+                                                    <input  jsf:value="#{juzgadosSession.juzgado.numero}" type="number"  class="form-control"  placeholder="Digite aquí el número de juzgado" pt:min="1" pt:max="150"  minlength="0" maxlength="2" required="true" />
+                                                    <p></p>
+                                                    Tipo juzgado/Entidad
+                                                    <b:selectOneMenu class="form-control" value="#{juzgadosSession.juzgado.codigoClase}" pt:required="true"  >
+                                                        <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                                        <f:selectItem itemValue="ALC" itemLabel="ALCALDÍA"></f:selectItem>
+                                                        <f:selectItem itemValue="CM" itemLabel="CIVIL MUNICIPAL"></f:selectItem>
+                                                        <f:selectItem itemValue="CME" itemLabel="CIVIL MUNICIPAL DE EJECUCIÓN"></f:selectItem>
+                                                        <f:selectItem itemValue="CC" itemLabel="CIVIL DEL CIRCUITO"></f:selectItem>
+                                                        <f:selectItem itemValue="CCE" itemLabel="CIVIL DEL CIRCUITO DE EJECUCIÓN"></f:selectItem>
+                                                        <f:selectItem itemValue="PCCM" itemLabel="PEQUEÑAS CAUSAS Y COMPETENCIA MÚLTIPLE"></f:selectItem>
+                                                        <f:selectItem itemValue="PROM" itemLabel="PROMISCUO"></f:selectItem>
+                                                    </b:selectOneMenu>
+                                                    <p></p> 
+                                                    Lugar consulta
+                                                    <b:selectOneMenu class="form-control" value="#{juzgadosSession.juzgado.lugarConsultaRama}" pt:required="true"  >
+                                                        <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                                        <f:selectItem itemValue="NO APLICA" itemLabel="NO APLICA"></f:selectItem>
+                                                        <f:selectItem itemValue='CIVILES MUNICIPALES (CRA 10)' itemLabel='CIVILES MUNICIPALES (CRA 10)'></f:selectItem>
+                                                        <f:selectItem itemValue='CIVILES MUNICIPALES (NEMQUETEBA)' itemLabel='CIVILES MUNICIPALES (NEMQUETEBA)'></f:selectItem>
+                                                        <f:selectItem itemValue='39 - 40 - 41 - 42 CIVILES MUNICIPALES' itemLabel='39 - 40 - 41 - 42 CIVILES MUNICIPALES'></f:selectItem>
+                                                        <f:selectItem itemValue='63 - 64 - 65 - 70 - 71 CIVILES MUNICIPALES' itemLabel='63 - 64 - 65 - 70 - 71 CIVILES MUNICIPALES'></f:selectItem>
+                                                        <f:selectItem itemValue='66 - 67 - 68 - 69 CIVILES MUNICIPALES' itemLabel='66 - 67 - 68 - 69 CIVILES MUNICIPALES'></f:selectItem>
+                                                        <f:selectItem itemValue='55 - 56 - 57 - 58 CIVILES MUNICIPALES' itemLabel='55 - 56 - 57 - 58 CIVILES MUNICIPALES'></f:selectItem>
+                                                        <f:selectItem itemValue='CIVILES DEL CIRCUITO' itemLabel='CIVILES DEL CIRCUITO'></f:selectItem>
+                                                        <f:selectItem itemValue='44 CIVIL DEL CIRCUITO' itemLabel='44 CIVIL DEL CIRCUITO'></f:selectItem>
+                                                        <f:selectItem itemValue='CIVIL DEL CIRCUITO DE EJECUCIÓN' itemLabel='CIVIL DEL CIRCUITO DE EJECUCIÓN'></f:selectItem>
+                                                        <f:selectItem itemValue='1 - 2 PEQUEÑAS CAUSAS' itemLabel='1 - 2 PEQUEÑAS CAUSAS'></f:selectItem>
+                                                    </b:selectOneMenu>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    Dependiente       
+                                                    <b:selectOneMenu  class="form-control" value="#{juzgadosSession.juzgado.idDependiente}" required="true">
+                                                        <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                                        <f:selectItems value="#{usuariosSession.traerUsuariosPorRol('DEPENDIENTE')}" var="c"  itemLabel="#{c.nombreUsuario}">
+                                                        </f:selectItems>
+                                                    </b:selectOneMenu>
+                                                    <p></p> 
+                                                    Día revisión
+                                                    <input  jsf:value="#{juzgadosSession.juzgado.diaRevision}" type="number"  class="form-control"  placeholder="Digite aquí el día de revisión" pt:min="1" pt:max="5"  minlength="1" maxlength="1" required="true"  />
+                                                    <p></p> 
+                                                    Ciudad       
+                                                    <b:selectOneMenu  class="form-control" value="#{juzgadosSession.juzgado.idCiudad}" required="true">
+                                                        <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                                        <f:selectItems value="#{juzgadosSession.traerTodosLasCiudades()}" var="c"  itemLabel="#{c.ciudad}">
+                                                        </f:selectItems>
+                                                    </b:selectOneMenu> 
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    Dirección
+                                                    <input  jsf:value="#{juzgadosSession.juzgado.direccion}" type="text"  class="form-control"  placeholder="Digite aquí la dirección del juzgado" minlength="3" maxlength="20"  required="true" />
+                                                    <p></p>
+
+                                                    Edificio
+                                                    <h:selectOneMenu class="form-control" value="#{juzgadosSession.juzgado.edificio}" pt:required="true"  >
+                                                        <f:selectItem itemValue="" itemLabel="Seleccione una opción"></f:selectItem>
+                                                        <f:selectItem itemValue='SIN EDIFICIO' itemLabel='SIN EDIFICIO'></f:selectItem>
+                                                        <f:selectItem itemValue='CAMACOL' itemLabel='CAMACOL'></f:selectItem>
+                                                        <f:selectItem itemValue='CONSEJO DE JUSTICIA' itemLabel='CONSEJO DE JUSTICIA'></f:selectItem>
+                                                        <f:selectItem itemValue='HERNANDO MORALES' itemLabel='HERNANDO MORALES'></f:selectItem>
+                                                        <f:selectItem itemValue='JARAMILLO' itemLabel='JARAMILLO'></f:selectItem>
+                                                        <f:selectItem itemValue='SAN REMO' itemLabel='SAN REMO'></f:selectItem>
+                                                        <f:selectItem itemValue='VIRREY CENTRAL' itemLabel='VIRREY CENTRAL'></f:selectItem>
+                                                        <f:selectItem itemValue='VIRREY NORTE' itemLabel='VIRREY NORTE'></f:selectItem>
+                                                        <f:selectItem itemValue='VIRREY SUR' itemLabel='VIRREY SUR'></f:selectItem>
+                                                        <f:selectItem itemValue='ALCALDIA ANTONIO NARIÑO' itemLabel='ALCALDIA ANTONIO NARIÑO'></f:selectItem>
+                                                        <f:selectItem itemValue='ALCALDIA BARRIOS UNIDOS' itemLabel='ALCALDIA BARRIOS UNIDOS'></f:selectItem>
+                                                        <f:selectItem itemValue='ALCALDÍA CIUDAD BOLIVAR' itemLabel='ALCALDÍA CIUDAD BOLIVAR'></f:selectItem>
+                                                        <f:selectItem itemValue='ALCALDIA KENNEDY' itemLabel='ALCALDIA KENNEDY'></f:selectItem>
+                                                        <f:selectItem itemValue='ALCALDIA RAFAEL URIBE URIBE' itemLabel='ALCALDIA RAFAEL URIBE URIBE'></f:selectItem>
+                                                        <f:selectItem itemValue='ALCALDÍA SAN CRISTOBAL' itemLabel='ALCALDÍA SAN CRISTOBAL'></f:selectItem>
+                                                        <f:selectItem itemValue='ALCALDIA SANTA FE' itemLabel='ALCALDIA SANTA FE'></f:selectItem>
+                                                        <f:selectItem itemValue='ALCALDÍA SUBA' itemLabel='ALCALDÍA SUBA'></f:selectItem>
+                                                        <f:selectItem itemValue='ALCALDÍA TEUSAQUILLO' itemLabel='ALCALDÍA TEUSAQUILLO'></f:selectItem>
+                                                        <f:selectItem itemValue='ALCALDÍA USAQUÉN' itemLabel='ALCALDÍA USAQUÉN'></f:selectItem>
+                                                        <f:selectItem itemValue='ALCLADÍA CANDELARIA' itemLabel='ALCLADÍA CANDELARIA'></f:selectItem>
+                                                    </h:selectOneMenu>
+                                                    <p></p>
+                                                    Piso
+                                                    <input  jsf:value="#{juzgadosSession.juzgado.piso}" type="number"  class="form-control"  placeholder="Digite aquí el segundo nombre" pt:min="1" pt:max="30" minlength="1" maxlength="2"  required="true" />
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <h7 style="color: white;">espacio</h7>
+                                            <h:commandButton style="background: #ff8300; border-color: #ff8300; font-weight:bold; "  class="form-control btn-warning" value="Modificar entidad" action="#{juzgadosSession.modificarJuzgado()}" type="submit">
+                                            </h:commandButton>
+                                        </div>    
+                                    </div>
+
+                                </h:form>
+                            </div>
+                        </div>
+                    </div>
+                </div>   
+            </div>
+            <div jsf:rendered="#{iniciarSession.usuarioLogueado.rol ==  null}">
+                <div class="navbar-header">
+                    <a class="navbar-brand">Su sesión finalizó.
+                    </a>
+                </div>
+            </div>
+        </div>
+        <script src="../Recursos/vendor/jquery/jquery.min.js"></script>
+        <script src="../Recursos/vendor/bootstrap/js/bootstrap.min.js"></script>
+        <script src="../Recursos/vendor/metisMenu/metisMenu.min.js"></script>
+        <script src="../Recursos/vendor/datatables/js/jquery.dataTables.min.js"></script>
+        <script src="../Recursos/vendor/datatables-plugins/dataTables.bootstrap.min.js"></script>
+        <script src="../Recursos/vendor/datatables-responsive/dataTables.responsive.js"></script>
+        <script src="../Recursos/dist/js/ct.js"></script>
+        <script>
+            $(document).ready(function () {
+                $('#tablaUno').DataTable({
+                    responsive: true
+                });
+            });
+        </script>
+    </h:body>
+</html>
+
